@@ -224,7 +224,7 @@ if __name__ == "__main__":
     ):
         print(menu.encode("utf8"))
 
-        if not args.no_slack:
+        if not args.dry_run:
 
             if args.user:
                 target = "-u {}".format(args.user)
