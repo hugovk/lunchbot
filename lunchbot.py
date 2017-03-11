@@ -16,7 +16,7 @@ import os
 import random
 import urllib2
 
-from pprint import pprint
+# from pprint import pprint
 
 
 KAARTI_URL = "http://www.ravintolakaarti.fi/lounas"
