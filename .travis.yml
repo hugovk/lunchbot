@@ -15,7 +15,9 @@ python:
 sudo: false
 
 install:
- - pip install -r requirements.txt
+ # Speedup for CI: http://lxml.de/installation.html#installation
+ - CFLAGS=-O0 pip install lxml
+ - pip install BeautifulSoup4 slacker-cli
  - pip install pep8 pyflakes
 
 script:
