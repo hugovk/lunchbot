@@ -3,7 +3,6 @@ language: python
 # Supported CPython versions:
 # https://en.wikipedia.org/wiki/CPython#Version_history
 python:
- - pypy3
  - pypy
  - 2.7
  - 3.6
@@ -14,9 +13,14 @@ python:
 sudo: false
 
 install:
+ - pip install -r requirements.txt
  - pip install pep8 pyflakes
 
 script:
+
+ # Dry run
+ - python lunchbot.py --dry-run
+
  # Static analysis
  - pyflakes .
  - pep8 --statistics --count .

@@ -14,7 +14,12 @@ import argparse
 import datetime
 import os
 import random
-import urllib2
+try:
+    # Python 2
+    from urllib2 import urlopen
+except ImportError:
+    # Python 3
+    from urllib.request import urlopen
 
 # from pprint import pprint
 
@@ -99,7 +104,7 @@ def day_name(day_number):
 
 def get_soup(url):
     """Not that kind"""
-    page = urllib2.urlopen(url)
+    page = urlopen(url)
     soup = BeautifulSoup(page.read(), "lxml")
     for br in soup.find_all("br"):
         br.replace_with("\n")
@@ -197,7 +202,7 @@ if __name__ == "__main__":
         "-u", "--user",
         help="Send to this Slack user instead of the lunch channel")
     parser.add_argument(
-        "-x", "-ns", "--no-slack",
+        "-x", "--dry-run",
         action="store_true",
         help="Don't post to Slack")
     args = parser.parse_args()
@@ -219,7 +224,7 @@ if __name__ == "__main__":
     ):
         print(menu.encode("utf8"))
 
-        if not args.no_slack:
+        if not args.dry_run:
 
             if args.user:
                 target = "-u {}".format(args.user)
