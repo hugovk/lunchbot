@@ -6,13 +6,12 @@ Check what's for lunch at local restaurants and post to Slack
 
 ## Setup
 
-Prerequisites for posting to Slack:
-
 ```bash
-pip install slacker-cli
+pip install BeautifulSoup4 lxml slacker-cli
+
 ```
 
-Then get a [Slack token](https://github.com/juanpabloaj/slacker-cli#tokens) and save it in LUNCHBOT_TOKEN the environment variable.
+To post to Slack, get a [token](https://github.com/juanpabloaj/slacker-cli#tokens) and save it in the `LUNCHBOT_TOKEN` environment variable.
 
 ## Usage
 
