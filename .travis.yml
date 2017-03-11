@@ -1,5 +1,7 @@
 language: python
 
+cache: pip
+
 # Supported CPython versions:
 # https://en.wikipedia.org/wiki/CPython#Version_history
 python:
