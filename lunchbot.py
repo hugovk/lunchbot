@@ -14,7 +14,12 @@ import argparse
 import datetime
 import os
 import random
-import urllib2
+try:
+    # Python 2
+    from urllib2 import urlopen
+except ImportError:
+    # Python 3
+    from urllib.request import urlopen
 
 # from pprint import pprint
 
@@ -99,7 +104,7 @@ def day_name(day_number):
 
 def get_soup(url):
     """Not that kind"""
-    page = urllib2.urlopen(url)
+    page = urlopen(url)
     soup = BeautifulSoup(page.read(), "lxml")
     for br in soup.find_all("br"):
         br.replace_with("\n")
