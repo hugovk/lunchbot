@@ -14,9 +14,14 @@ python:
 sudo: false
 
 install:
+ - pip install -r requirements.txt
  - pip install pep8 pyflakes
 
 script:
+
+ # Dry run
+ - python lunchbot.py --dry-run
+
  # Static analysis
  - pyflakes .
  - pep8 --statistics --count .
