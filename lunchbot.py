@@ -89,7 +89,7 @@ def day_name(day_number):
     if day_number == 0:
         return "maanantai"
     elif day_number == 1:
-        return " tiistai"
+        return "tiistai"
     elif day_number == 2:
         return "keskiviikko"
     elif day_number == 3:
