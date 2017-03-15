@@ -202,7 +202,7 @@ if __name__ == "__main__":
         "-u", "--user",
         help="Send to this Slack user instead of the lunch channel")
     parser.add_argument(
-        "-x", "--dry-run",
+        "-n", "--dry-run",
         action="store_true",
         help="Don't post to Slack")
     args = parser.parse_args()
