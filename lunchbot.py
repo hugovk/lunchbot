@@ -217,11 +217,18 @@ if __name__ == "__main__":
         tomorrow_number = today_number + 1
     tomorrow = day_name(tomorrow_number).lower()
 
-    for menu in (
-        lunch_kaarti(),
-        lunch_savel(),
-        lunch_sogno()
-    ):
+    restaurants = ["kaarti", "savel", "sogno"]
+    random.shuffle(restaurants)
+
+    for restaurant in restaurants:
+
+        if restaurant == "kaarti":
+            menu = lunch_kaarti()
+        elif restaurant == "savel":
+            menu = lunch_savel()
+        elif restaurant == "sogno":
+            menu = lunch_sogno()
+
         print(menu.encode("utf8"))
 
         if not args.dry_run:
