@@ -149,7 +149,12 @@ def lunch_kaarti():
     todays_menu = ["", ":kaarti: Kaarti {}".format(url), ""]
 
     # Get today's menu
-    todays_menu.extend(get_submenu(children, today, tomorrow))
+    kaarti_menu = get_submenu(children, today, tomorrow)
+
+    # Switch SHOUTY ALL CAPS to Sentence case
+    kaarti_menu = [line.capitalize() for line in kaarti_menu]
+
+    todays_menu.extend(kaarti_menu)
 
     return "\n".join(todays_menu)
 
