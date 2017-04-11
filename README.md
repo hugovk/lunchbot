@@ -24,3 +24,21 @@ python lunchbot.py
 
 # For testing, post to some username instead of the #lunch channel
 python lunchbot.py --user username
+```
+
+## Cron
+
+For regular posting, you can use something like cron. For example, create /path/to/lunchbot.sh:
+```
+!/bin/bash
+
+export PATH=/usr/local/bin:$PATH
+export LUNCHBOT_TOKEN="TODO_ENTER_YOURS"
+
+python /path/to/lunchbot.py >> /tmp/lunchbot.log 2>&1
+```
+
+And then run `crontab -e` and add this to post at 11:30am every workday (days 1-5):
+```
+30 11 * * 1-5 /path/to/lunchbot.sh
+```
