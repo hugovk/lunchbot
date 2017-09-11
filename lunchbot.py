@@ -236,6 +236,11 @@ if __name__ == "__main__":
 
         print(menu.encode("utf8"))
 
+        # Escape ' like in "Pasta all'amatriciana" by
+        # replacing ' with '"'"'
+        # https://stackoverflow.com/a/1250279/724176
+        menu = menu.replace("'", "'\"'\"'")
+
         if not args.dry_run:
 
             if args.user:
