@@ -25,7 +25,7 @@ except ImportError:
 
 
 KAARTI_URL = "http://www.ravintolakaarti.fi/lounas"
-SAVEL_URL = "http://toolonsavel.fi/index.php?page=lounas&lang=fi"
+SAVEL_URL = "http://toolonsavel.fi/menu/?lang=fi#lounas"
 SOGNO_URL = "http://www.trattoriasogno.fi/lounas"
 
 EMOJI = [
@@ -124,6 +124,10 @@ def get_submenu(children, start, end):
 
         child_text = child.get_text()
 
+        if 'Lounas maanantaista perjantaihin' in child_text:
+            # Ignore this bit
+            continue
+
         if child_text:
             if start in child_text.lower():
                 started = True
@@ -131,7 +135,8 @@ def get_submenu(children, start, end):
                 break
 
             if started:
-                submenu.append(child_text)
+                if not submenu or submenu[-1] != child_text:  # No duplicates
+                    submenu.append(child_text)
 
     return submenu
 
@@ -167,16 +172,17 @@ def lunch_savel():
     soup = get_soup(url)
 
     # Weekly menu is in <div id="cL">
-    weekly_menu = soup.find("div", id="cL")
+    weekly_menu = soup.find("div", class_="menu-box")
+    weekly_menu = weekly_menu.find("div", class_="wysiwyg")
     children = weekly_menu.findChildren()
     todays_menu = ["", ":savel: Sävel {}".format(url), ""]
 
     # Get the stuff before Monday: weekly burger
-    todays_menu.extend(get_submenu(children, "viikon burgerit", monday+":"))
+    todays_menu.extend(get_submenu(children, "viikon burgerit:", monday))
     todays_menu.append("")
 
     # Get today's menu
-    todays_menu.extend(get_submenu(children, today+":", tomorrow+":"))
+    todays_menu.extend(get_submenu(children, today, tomorrow))
 
     return "\n".join(todays_menu)
 
