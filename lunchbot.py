@@ -25,6 +25,7 @@ except ImportError:
 
 
 KAARTI_URL = "http://www.ravintolakaarti.fi/lounas"
+KUUKUU_URL = "https://www.kuukuu.fi/fi/lounas"
 SAVEL_URL = "http://toolonsavel.fi/menu/?lang=fi#lounas"
 SOGNO_URL = "http://www.trattoriasogno.fi/lounas"
 
@@ -164,6 +165,24 @@ def lunch_kaarti():
     return "\n".join(todays_menu)
 
 
+def lunch_kuukuu():
+    """
+    Get the lunch menu from KuuKuu
+    """
+    url = KUUKUU_URL
+    soup = get_soup(url)
+
+    # Weekly menu is in <div class="innercontent">
+    weekly_menu = soup.find("div", class_="innercontent")
+    children = weekly_menu.findAll("p")
+    todays_menu = ["", ":kuukuu: KuuKuu {}".format(url), ""]
+
+    # Get today's menu
+    todays_menu.extend(get_submenu(children, today, tomorrow))
+
+    return "\n".join(todays_menu)
+
+
 def lunch_savel():
     """
     Get the lunch menu from Sävel
@@ -228,13 +247,15 @@ if __name__ == "__main__":
         tomorrow_number = today_number + 1
     tomorrow = day_name(tomorrow_number).lower()
 
-    restaurants = ["kaarti", "savel", "sogno"]
+    restaurants = ["kaarti", "kuukuu", "savel", "sogno"]
     random.shuffle(restaurants)
 
     for restaurant in restaurants:
 
         if restaurant == "kaarti":
             menu = lunch_kaarti()
+        elif restaurant == "kuukuu":
+            menu = lunch_kuukuu()
         elif restaurant == "savel":
             menu = lunch_savel()
         elif restaurant == "sogno":
