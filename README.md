@@ -29,7 +29,7 @@ python lunchbot.py --user username
 ## Cron
 
 For regular posting, you can use something like cron. For example, create /path/to/lunchbot.sh:
-```
+```bash
 !/bin/bash
 
 export PATH=/usr/local/bin:$PATH
