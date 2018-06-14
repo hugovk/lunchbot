@@ -9,12 +9,14 @@ Get a Slack token and save it in LUNCHBOT_TOKEN the environment variable
 See: https://github.com/juanpabloaj/slacker-cli#tokens
 """
 from __future__ import print_function, unicode_literals
-from bs4 import BeautifulSoup  # pip install BeautifulSoup4 lxml
+
 import argparse
 import datetime
 import os
 import random
 import traceback
+
+from bs4 import BeautifulSoup  # pip install BeautifulSoup4 lxml
 
 try:
     # Python 2
@@ -30,6 +32,8 @@ KAARTI_URL = "http://www.ravintolakaarti.fi/lounas"
 KUUKUU_URL = "https://www.kuukuu.fi/fi/lounas"
 SAVEL_URL = "http://toolonsavel.fi/menu/?lang=fi#lounas"
 SOGNO_URL = "http://www.trattoriasogno.fi/lounas"
+
+RESTAURANTS = ["kaarti", "kuukuu", "savel", "sogno"]
 
 EMOJI = [
     ":fork_and_knife:",
@@ -232,6 +236,12 @@ if __name__ == "__main__":
         description="Post what's for lunch at local restaurants to Slack",
         formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument(
+        "-r", "--restaurants",
+        choices=["all"] + RESTAURANTS,
+        default=["all"],
+        nargs='+',
+        help="Which restaurants to check")
+    parser.add_argument(
         "-u", "--user",
         help="Send to this Slack user instead of the lunch channel")
     parser.add_argument(
@@ -250,7 +260,10 @@ if __name__ == "__main__":
         tomorrow_number = today_number + 1
     tomorrow = day_name(tomorrow_number).lower()
 
-    restaurants = ["kaarti", "kuukuu", "savel", "sogno"]
+    if args.restaurants == ["all"]:
+        restaurants = RESTAURANTS
+    else:
+        restaurants = args.restaurants
     random.shuffle(restaurants)
 
     for restaurant in restaurants:
