@@ -14,6 +14,8 @@ import argparse
 import datetime
 import os
 import random
+import traceback
+
 try:
     # Python 2
     from urllib2 import urlopen
@@ -252,14 +254,19 @@ if __name__ == "__main__":
 
     for restaurant in restaurants:
 
-        if restaurant == "kaarti":
-            menu = lunch_kaarti()
-        elif restaurant == "kuukuu":
-            menu = lunch_kuukuu()
-        elif restaurant == "savel":
-            menu = lunch_savel()
-        elif restaurant == "sogno":
-            menu = lunch_sogno()
+        try:
+            if restaurant == "kaarti":
+                menu = lunch_kaarti()
+            elif restaurant == "kuukuu":
+                menu = lunch_kuukuu()
+            elif restaurant == "savel":
+                menu = lunch_savel()
+            elif restaurant == "sogno":
+                menu = lunch_sogno()
+        except AttributeError:
+            print(restaurant)
+            traceback.print_exc()
+            continue
 
         print(menu.encode("utf8"))
 
