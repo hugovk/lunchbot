@@ -9,6 +9,7 @@ cache: pip
 # https://en.wikipedia.org/wiki/CPython#Version_history
 python:
  - 2.7
+ - 3.7-dev
  - 3.6
  - 3.5
  - 3.4
