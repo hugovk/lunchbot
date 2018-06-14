@@ -174,8 +174,9 @@ def lunch_kuukuu():
     url = KUUKUU_URL
     soup = get_soup(url)
 
-    # Weekly menu is in <div class="innercontent">
-    weekly_menu = soup.find("div", class_="innercontent")
+    # Weekly menu is in the second <section>
+    weekly_menu = soup.findAll("section")[1]
+
     children = weekly_menu.findAll("p")
     todays_menu = ["", ":kuukuu: KuuKuu {}".format(url), ""]
 
