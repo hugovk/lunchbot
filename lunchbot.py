@@ -14,6 +14,8 @@ import argparse
 import datetime
 import os
 import random
+import traceback
+
 try:
     # Python 2
     from urllib2 import urlopen
@@ -172,8 +174,9 @@ def lunch_kuukuu():
     url = KUUKUU_URL
     soup = get_soup(url)
 
-    # Weekly menu is in <div class="innercontent">
-    weekly_menu = soup.find("div", class_="innercontent")
+    # Weekly menu is in the second <section>
+    weekly_menu = soup.findAll("section")[1]
+
     children = weekly_menu.findAll("p")
     todays_menu = ["", ":kuukuu: KuuKuu {}".format(url), ""]
 
@@ -252,14 +255,19 @@ if __name__ == "__main__":
 
     for restaurant in restaurants:
 
-        if restaurant == "kaarti":
-            menu = lunch_kaarti()
-        elif restaurant == "kuukuu":
-            menu = lunch_kuukuu()
-        elif restaurant == "savel":
-            menu = lunch_savel()
-        elif restaurant == "sogno":
-            menu = lunch_sogno()
+        try:
+            if restaurant == "kaarti":
+                menu = lunch_kaarti()
+            elif restaurant == "kuukuu":
+                menu = lunch_kuukuu()
+            elif restaurant == "savel":
+                menu = lunch_savel()
+            elif restaurant == "sogno":
+                menu = lunch_sogno()
+        except AttributeError:
+            print(restaurant)
+            traceback.print_exc()
+            continue
 
         print(menu.encode("utf8"))
 
