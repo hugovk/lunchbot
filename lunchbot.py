@@ -8,22 +8,14 @@ pip install slacker-cli
 Get a Slack token and save it in LUNCHBOT_TOKEN the environment variable
 See: https://github.com/juanpabloaj/slacker-cli#tokens
 """
-from __future__ import print_function, unicode_literals
-
 import argparse
 import datetime
 import os
 import random
 import traceback
+from urllib.request import urlopen
 
 from bs4 import BeautifulSoup  # pip install BeautifulSoup4 lxml
-
-try:
-    # Python 2
-    from urllib2 import urlopen
-except ImportError:
-    # Python 3
-    from urllib.request import urlopen
 
 # from pprint import pprint
 
@@ -282,7 +274,7 @@ if __name__ == "__main__":
             traceback.print_exc()
             continue
 
-        print(menu.encode("utf8"))
+        print(menu)
 
         # Escape ' like in "Pasta all'amatriciana" by
         # replacing ' with '"'"'
@@ -303,6 +295,6 @@ if __name__ == "__main__":
 
             cmd = "echo '{}' | {}".format(menu, slacker_cmd)
             # print(cmd.encode("utf8"))
-            os.system(cmd.encode("utf8"))
+            os.system(cmd)
 
 # End of file
