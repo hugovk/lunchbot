@@ -263,14 +263,11 @@ if __name__ == "__main__":
     for restaurant in restaurants:
 
         try:
-            if restaurant == "kaarti":
-                menu = lunch_kaarti()
-            elif restaurant == "kuukuu":
-                menu = lunch_kuukuu()
-            elif restaurant == "savel":
-                menu = lunch_savel()
-            elif restaurant == "sogno":
-                menu = lunch_sogno()
+            # Call function from a string
+            function = "lunch_" + restaurant
+            # Like calling lunch_savel()
+            menu = locals()[function]()
+
         except AttributeError:
             print(restaurant)
             traceback.print_exc()
