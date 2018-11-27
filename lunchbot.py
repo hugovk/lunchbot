@@ -22,10 +22,12 @@ from bs4 import BeautifulSoup  # pip install BeautifulSoup4 lxml
 
 KAARTI_URL = "http://www.ravintolakaarti.fi/lounas"
 KUUKUU_URL = "https://www.kuukuu.fi/fi/lounas"
+PIHKA_URL = "https://kasarmi.pihka.fi"
 SAVEL_URL = "http://toolonsavel.fi/menu/?lang=fi#lounas"
 SOGNO_URL = "http://www.trattoriasogno.fi/lounas"
 
-RESTAURANTS = ["kaarti", "kuukuu", "savel", "sogno"]
+# RESTAURANTS = ["kaarti", "kuukuu", "savel", "sogno"]
+RESTAURANTS = ["pihka"]
 
 EMOJI = [
     ":fork_and_knife:",
@@ -175,6 +177,25 @@ def lunch_kuukuu():
 
     children = weekly_menu.findAll("p")
     todays_menu = ["", f":kuukuu: KuuKuu {url}", ""]
+
+    # Get today's menu
+    todays_menu.extend(get_submenu(children, today, tomorrow))
+
+    return "\n".join(todays_menu)
+
+
+def lunch_pihka():
+    """
+    Get the lunch menu from Pihka
+    """
+    url = PIHKA_URL
+    soup = get_soup(url)
+
+    # Weekly menu is in <div id="primary">
+    weekly_menu = soup.find("div", id="primary")
+    children = weekly_menu.find_all("div", class_="menu-day")
+
+    todays_menu = ["", f":pihka: Pihka {url}", ""]
 
     # Get today's menu
     todays_menu.extend(get_submenu(children, today, tomorrow))
