@@ -1,11 +1,11 @@
 language: python
-dist: trusty
+dist: xenial
 cache: pip
 
 # Supported CPython versions:
 # https://en.wikipedia.org/wiki/CPython#Version_history
 python:
- - 3.7-dev
+ - 3.7
  - 3.6
 
 install:
