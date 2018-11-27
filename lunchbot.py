@@ -123,7 +123,7 @@ def get_submenu(children, start, end):
 
         child_text = child.get_text()
 
-        if 'Lounas maanantaista perjantaihin' in child_text:
+        if "Lounas maanantaista perjantaihin" in child_text:
             # Ignore this bit
             continue
 
@@ -226,20 +226,22 @@ def lunch_sogno():
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Post what's for lunch at local restaurants to Slack",
-        formatter_class=argparse.ArgumentDefaultsHelpFormatter)
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
     parser.add_argument(
-        "-r", "--restaurants",
+        "-r",
+        "--restaurants",
         choices=["all"] + RESTAURANTS,
         default=["all"],
-        nargs='+',
-        help="Which restaurants to check")
+        nargs="+",
+        help="Which restaurants to check",
+    )
     parser.add_argument(
-        "-u", "--user",
-        help="Send to this Slack user instead of the lunch channel")
+        "-u", "--user", help="Send to this Slack user instead of the lunch channel"
+    )
     parser.add_argument(
-        "-n", "--dry-run",
-        action="store_true",
-        help="Don't post to Slack")
+        "-n", "--dry-run", action="store_true", help="Don't post to Slack"
+    )
     args = parser.parse_args()
 
     # Get Monday, today and tomorrow in Finnish
@@ -288,9 +290,9 @@ if __name__ == "__main__":
             else:
                 target = "-c lunch"
 
-            slacker_cmd = (
-                "slacker -t $LUNCHBOT_TOKEN -n LunchBot -i {} {}"
-                ).format(random.choice(EMOJI), target)
+            slacker_cmd = ("slacker -t $LUNCHBOT_TOKEN -n LunchBot -i {} {}").format(
+                random.choice(EMOJI), target
+            )
             # print(slacker_cmd)
 
             cmd = "echo '{}' | {}".format(menu, slacker_cmd)
