@@ -9,6 +9,7 @@ Get a Slack token and save it in LUNCHBOT_TOKEN the environment variable
 See: https://github.com/juanpabloaj/slacker-cli#tokens
 """
 import argparse
+import calendar
 import datetime
 import os
 import random
@@ -23,7 +24,7 @@ from bs4 import BeautifulSoup  # pip install BeautifulSoup4 lxml
 BANK_URL = "http://www.ravintolabank.fi/en/lunch-club-en/"
 KAARTI_URL = "http://www.ravintolakaarti.fi/lounas"
 KUUKUU_URL = "https://www.kuukuu.fi/fi/lounas"
-PIHKA_URL = "https://kasarmi.pihka.fi"
+PIHKA_URL = "https://kasarmi.pihka.fi/en/"
 SAVEL_URL = "http://toolonsavel.fi/menu/?lang=fi#lounas"
 SOGNO_URL = "http://www.trattoriasogno.fi/lounas"
 
@@ -104,10 +105,9 @@ def day_name_fi(day_number):
         return "sunnuntai"
 
 
-def day_name_en():
-    """Return the English day name for today"""
-    now = datetime.datetime.now()
-    return now.strftime("%A")
+def day_name_en(day_number):
+    """Return the English day name for this day number"""
+    return calendar.day_name[day_number]
 
 
 def get_soup(url):
@@ -137,9 +137,9 @@ def get_submenu(children, start, end):
             continue
 
         if child_text:
-            if start in child_text.lower():
+            if start.lower() in child_text.lower():
                 started = True
-            if started and end in child_text.lower():
+            if started and end.lower() in child_text.lower():
                 break
 
             if started:
@@ -160,7 +160,7 @@ def lunch_bank():
     weekly_menu = soup.find("div", class_="lunch-list")
 
     # Daily menu is in <div class="lunch lunch_monday">
-    today_class_name = f"lunch_{day_name_en().lower()}"
+    today_class_name = f"lunch_{today_en.lower()}"
     todays_menu_div = weekly_menu.find("div", class_=today_class_name)
 
     # Remove empty newlines
@@ -186,7 +186,7 @@ def lunch_kaarti():
     todays_menu = ["", f":kaarti: Kaarti {url}", ""]
 
     # Get today's menu
-    kaarti_menu = get_submenu(children, today, tomorrow)
+    kaarti_menu = get_submenu(children, today_fi, tomorrow_fi)
 
     # Switch SHOUTY ALL CAPS to Sentence case
     kaarti_menu = [line.capitalize() for line in kaarti_menu]
@@ -210,7 +210,7 @@ def lunch_kuukuu():
     todays_menu = ["", f":kuukuu: KuuKuu {url}", ""]
 
     # Get today's menu
-    todays_menu.extend(get_submenu(children, today, tomorrow))
+    todays_menu.extend(get_submenu(children, today_fi, tomorrow_fi))
 
     return "\n".join(todays_menu)
 
@@ -227,9 +227,10 @@ def lunch_pihka():
     children = weekly_menu.find_all("div", class_="menu-day")
 
     todays_menu = ["", f":pihka: Pihka {url}", ""]
+    print(today_en, tomorrow_en)
 
     # Get today's menu
-    menu_text = get_submenu(children, today, tomorrow)[0]
+    menu_text = get_submenu(children, today_en, tomorrow_en)[0]
     menu_text = menu_text.replace("\n\n\n", "\n\n")
     todays_menu.append(menu_text)
 
@@ -254,7 +255,7 @@ def lunch_savel():
     todays_menu.append("")
 
     # Get today's menu
-    todays_menu.extend(get_submenu(children, today, tomorrow))
+    todays_menu.extend(get_submenu(children, today_fi, tomorrow_fi))
 
     return "\n".join(todays_menu)
 
@@ -272,7 +273,7 @@ def lunch_sogno():
     todays_menu = ["", f":sogno: Sogno {url}", ""]
 
     # Get today's menu
-    todays_menu.extend(get_submenu(children, today, tomorrow))
+    todays_menu.extend(get_submenu(children, today_fi, tomorrow_fi))
 
     return "\n".join(todays_menu)
 
@@ -301,12 +302,16 @@ if __name__ == "__main__":
     # Get Monday, today and tomorrow in Finnish
     today_number = datetime.datetime.today().weekday()
     monday = day_name_fi(0)
-    today = day_name_fi(today_number)
+    today_fi = day_name_fi(today_number)
     if today_number == 4:
         tomorrow_number = 0  # Monday
     else:
         tomorrow_number = today_number + 1
-    tomorrow = day_name_fi(tomorrow_number).lower()
+    tomorrow_fi = day_name_fi(tomorrow_number).lower()
+
+    # Get today and tomorrow in English
+    today_en = day_name_en(today_number)
+    tomorrow_en = day_name_en(tomorrow_number)
 
     if args.restaurants == ["all"]:
         restaurants = RESTAURANTS
