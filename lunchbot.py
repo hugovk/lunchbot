@@ -150,7 +150,7 @@ def lunch_kaarti():
     # Weekly menu is in <div id="column1Content"><div class>
     weekly_menu = soup.find("div", id="column1Content")
     children = weekly_menu.findAll("p")
-    todays_menu = ["", ":kaarti: Kaarti {}".format(url), ""]
+    todays_menu = ["", f":kaarti: Kaarti {url}", ""]
 
     # Get today's menu
     kaarti_menu = get_submenu(children, today, tomorrow)
@@ -174,7 +174,7 @@ def lunch_kuukuu():
     weekly_menu = soup.findAll("section")[1]
 
     children = weekly_menu.findAll("p")
-    todays_menu = ["", ":kuukuu: KuuKuu {}".format(url), ""]
+    todays_menu = ["", f":kuukuu: KuuKuu {url}", ""]
 
     # Get today's menu
     todays_menu.extend(get_submenu(children, today, tomorrow))
@@ -193,7 +193,7 @@ def lunch_savel():
     weekly_menu = soup.find("div", class_="menu-box")
     weekly_menu = weekly_menu.find("div", class_="wysiwyg")
     children = weekly_menu.findChildren()
-    todays_menu = ["", ":savel: Sävel {}".format(url), ""]
+    todays_menu = ["", f":savel: Sävel {url}", ""]
 
     # Get the stuff before Monday: weekly burger
     todays_menu.extend(get_submenu(children, "viikon burgerit:", monday))
@@ -215,7 +215,7 @@ def lunch_sogno():
     # Weekly menu is in <div class="mainTextWidgetContent">
     weekly_menu = soup.find("div", class_="mainTextWidgetContent")
     children = weekly_menu.findAll("p")
-    todays_menu = ["", ":sogno: Sogno {}".format(url), ""]
+    todays_menu = ["", f":sogno: Sogno {url}", ""]
 
     # Get today's menu
     todays_menu.extend(get_submenu(children, today, tomorrow))
@@ -286,7 +286,7 @@ if __name__ == "__main__":
         if not args.dry_run:
 
             if args.user:
-                target = "-u {}".format(args.user)
+                target = f"-u {args.user}"
             else:
                 target = "-c lunch"
 
@@ -295,7 +295,7 @@ if __name__ == "__main__":
             )
             # print(slacker_cmd)
 
-            cmd = "echo '{}' | {}".format(menu, slacker_cmd)
+            cmd = f"echo '{menu}' | {slacker_cmd}"
             # print(cmd.encode("utf8"))
             os.system(cmd)
 
