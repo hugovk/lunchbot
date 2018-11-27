@@ -20,7 +20,7 @@ script:
 
  # Static analysis
  - flake8 --statistics --count
- - black --check --diff .
+ - black --py36 --check --diff .
 
 matrix:
   fast_finish: true
