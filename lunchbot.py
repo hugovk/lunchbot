@@ -83,7 +83,7 @@ EMOJI = [
 ]
 
 
-def day_name(day_number):
+def day_name_fi(day_number):
     """Return the Finnish day name for this day number"""
     # Could use locale, but it's a bit fiddly depending on Mac/Windows
     # and we only have one language
@@ -267,13 +267,13 @@ if __name__ == "__main__":
 
     # Get Monday, today and tomorrow in Finnish
     today_number = datetime.datetime.today().weekday()
-    monday = day_name(0)
-    today = day_name(today_number)
+    monday = day_name_fi(0)
+    today = day_name_fi(today_number)
     if today_number == 4:
         tomorrow_number = 0  # Monday
     else:
         tomorrow_number = today_number + 1
-    tomorrow = day_name(tomorrow_number).lower()
+    tomorrow = day_name_fi(tomorrow_number).lower()
 
     if args.restaurants == ["all"]:
         restaurants = RESTAURANTS
