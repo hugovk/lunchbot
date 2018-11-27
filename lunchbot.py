@@ -167,7 +167,7 @@ def lunch_bank():
     menu_text = todays_menu_div.get_text().strip().split("\n")
     menu_text = list(filter(None, menu_text))
 
-    todays_menu = ["", f":pihka: Pihka {url}", ""]
+    todays_menu = ["", f":ravintolabank: Bank {url}", ""]
     todays_menu.extend(menu_text)
 
     return "\n".join(todays_menu)
