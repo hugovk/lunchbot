@@ -20,6 +20,7 @@ from bs4 import BeautifulSoup  # pip install BeautifulSoup4 lxml
 # from pprint import pprint
 
 
+BANK_URL = "http://www.ravintolabank.fi/en/lunch-club-en/"
 KAARTI_URL = "http://www.ravintolakaarti.fi/lounas"
 KUUKUU_URL = "https://www.kuukuu.fi/fi/lounas"
 PIHKA_URL = "https://kasarmi.pihka.fi"
@@ -27,7 +28,7 @@ SAVEL_URL = "http://toolonsavel.fi/menu/?lang=fi#lounas"
 SOGNO_URL = "http://www.trattoriasogno.fi/lounas"
 
 # RESTAURANTS = ["kaarti", "kuukuu", "savel", "sogno"]
-RESTAURANTS = ["pihka"]
+RESTAURANTS = ["bank", "pihka"]
 
 EMOJI = [
     ":fork_and_knife:",
@@ -103,6 +104,12 @@ def day_name_fi(day_number):
         return "sunnuntai"
 
 
+def day_name_en():
+    """Return the English day name for today"""
+    now = datetime.datetime.now()
+    return now.strftime("%A")
+
+
 def get_soup(url):
     """Not that kind"""
     page = urlopen(url)
@@ -140,6 +147,30 @@ def get_submenu(children, start, end):
                     submenu.append(child_text)
 
     return submenu
+
+
+def lunch_bank():
+    """
+    Get the lunch menu from Bank
+    """
+    url = BANK_URL
+    soup = get_soup(url)
+
+    # Weekly menu is in <div class="lunch-list">
+    weekly_menu = soup.find("div", class_="lunch-list")
+
+    # Daily menu is in <div class="lunch lunch_monday">
+    today_class_name = f"lunch_{day_name_en().lower()}"
+    todays_menu_div = weekly_menu.find("div", class_=today_class_name)
+
+    # Remove empty newlines
+    menu_text = todays_menu_div.get_text().strip().split("\n")
+    menu_text = list(filter(None, menu_text))
+
+    todays_menu = ["", f":pihka: Pihka {url}", ""]
+    todays_menu.extend(menu_text)
+
+    return "\n".join(todays_menu)
 
 
 def lunch_kaarti():
