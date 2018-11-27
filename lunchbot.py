@@ -229,7 +229,9 @@ def lunch_pihka():
     todays_menu = ["", f":pihka: Pihka {url}", ""]
 
     # Get today's menu
-    todays_menu.extend(get_submenu(children, today, tomorrow))
+    menu_text = get_submenu(children, today, tomorrow)[0]
+    menu_text = menu_text.replace("\n\n\n", "\n\n")
+    todays_menu.append(menu_text)
 
     return "\n".join(todays_menu)
 
