@@ -9,8 +9,9 @@ python:
  - 3.6
 
 install:
- - pip install -r requirements.txt
- - pip install pyflakes pycodestyle
+ - pip install -U pip
+ - pip install -U black flake8
+ - pip install -U -r requirements.txt
 
 script:
 
@@ -18,8 +19,8 @@ script:
  - python lunchbot.py --dry-run
 
  # Static analysis
- - pyflakes .
- - pycodestyle --statistics --count .
+ - flake8 --statistics --count
+ - black --check --diff .
 
 matrix:
   fast_finish: true
