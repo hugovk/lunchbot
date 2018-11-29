@@ -169,6 +169,7 @@ def lunch_bank():
 
     todays_menu = ["", f":ravintolabank: Bank {url}", ""]
     todays_menu.extend(menu_text)
+    todays_menu.append("*Rush hour: 11:30*")
 
     return "\n".join(todays_menu)
 
