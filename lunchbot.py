@@ -18,18 +18,21 @@ from urllib.request import urlopen
 
 from bs4 import BeautifulSoup  # pip install BeautifulSoup4 lxml
 
+from requests_html import HTMLSession  # pip install requests-html
+
 # from pprint import pprint
 
 
 BANK_URL = "http://www.ravintolabank.fi/en/lunch-club-en/"
 KAARTI_URL = "http://www.ravintolakaarti.fi/lounas"
 KUUKUU_URL = "https://www.kuukuu.fi/fi/lounas"
+LOUNAAT_URL = "https://www.lounaat.info/kasarmikatu-42-00130-helsinki"
 PIHKA_URL = "https://kasarmi.pihka.fi/en/"
 SAVEL_URL = "http://toolonsavel.fi/menu/?lang=fi#lounas"
 SOGNO_URL = "http://www.trattoriasogno.fi/lounas"
 
 # RESTAURANTS = ["kaarti", "kuukuu", "savel", "sogno"]
-RESTAURANTS = ["bank", "pihka"]
+RESTAURANTS = ["bank", "pihka", "presto"]
 
 EMOJI = [
     ":fork_and_knife:",
@@ -83,6 +86,8 @@ EMOJI = [
     ":tomato:",
     ":corn:",
 ]
+
+LOUNAAT_RESPONSE = None
 
 
 def day_name_fi(day_number):
@@ -275,6 +280,39 @@ def lunch_sogno():
 
     # Get today's menu
     todays_menu.extend(get_submenu(children, today_fi, tomorrow_fi))
+
+    return "\n".join(todays_menu)
+
+
+def lunch_presto():
+    return lunch_lounaat("Presto")
+
+
+def lunch_lounaat(restaurant):
+    """
+    :param restaurant
+    :return: lunch menu
+    Get the lunch for a restaurant from Lounaat.info
+    """
+    global LOUNAAT_RESPONSE
+
+    if not LOUNAAT_RESPONSE:
+        # Requests-HTML is easier than Requests + Beautiful Soup
+        session = HTMLSession()
+        LOUNAAT_RESPONSE = session.get(LOUNAAT_URL)
+
+    element = LOUNAAT_RESPONSE.html.find("div.menu", containing=restaurant, first=True)
+
+    path = element.find("h3 a")[0].attrs["href"]  # eg. '/lounas/presto/helsinki'
+    url = f"https://www.lounaat.info{path}"
+
+    todays_menu = ["", f":{restaurant}: {restaurant} {url}", ""]
+    opening_hours = element.find("p.lunch", first=True).text
+    item_body = element.find("div.item-body", first=True).text
+    item_footer = element.find("div.item-footer", first=True).text
+    todays_menu.append(opening_hours)
+    todays_menu.append(item_body)
+    todays_menu.append(item_footer)
 
     return "\n".join(todays_menu)
 
