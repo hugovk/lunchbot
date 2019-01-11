@@ -32,7 +32,7 @@ SAVEL_URL = "http://toolonsavel.fi/menu/?lang=fi#lounas"
 SOGNO_URL = "http://www.trattoriasogno.fi/lounas"
 
 # RESTAURANTS = ["kaarti", "kuukuu", "savel", "sogno"]
-RESTAURANTS = ["bank", "pihka", "presto"]
+RESTAURANTS = ["bank", "pihka", "pompier", "presto"]
 
 EMOJI = [
     ":fork_and_knife:",
@@ -284,6 +284,10 @@ def lunch_sogno():
     return "\n".join(todays_menu)
 
 
+def lunch_pompier():
+    return lunch_lounaat("Pompier Espa")
+
+
 def lunch_presto():
     return lunch_lounaat("Presto")
 
@@ -306,7 +310,8 @@ def lunch_lounaat(restaurant):
     path = element.find("h3 a")[0].attrs["href"]  # eg. '/lounas/presto/helsinki'
     url = f"https://www.lounaat.info{path}"
 
-    todays_menu = ["", f":{restaurant}: {restaurant} {url}", ""]
+    emoji = restaurant.replace(" ", "_")
+    todays_menu = ["", f":{emoji}: {restaurant} {url}", ""]
     opening_hours = element.find("p.lunch", first=True).text
     item_body = element.find("div.item-body", first=True).text
     item_footer = element.find("div.item-footer", first=True).text
