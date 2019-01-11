@@ -32,7 +32,7 @@ SAVEL_URL = "http://toolonsavel.fi/menu/?lang=fi#lounas"
 SOGNO_URL = "http://www.trattoriasogno.fi/lounas"
 
 # RESTAURANTS = ["kaarti", "kuukuu", "savel", "sogno"]
-RESTAURANTS = ["bank", "pihka", "presto"]
+RESTAURANTS = ["bank", "pihka", "pompier", "presto"]
 
 EMOJI = [
     ":fork_and_knife:",
@@ -282,6 +282,10 @@ def lunch_sogno():
     todays_menu.extend(get_submenu(children, today_fi, tomorrow_fi))
 
     return "\n".join(todays_menu)
+
+
+def lunch_pompier():
+    return lunch_lounaat("Pompier Espa")
 
 
 def lunch_presto():
