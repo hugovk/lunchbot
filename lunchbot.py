@@ -172,6 +172,9 @@ def lunch_bank():
     menu_text = todays_menu_div.get_text().strip().split("\n")
     menu_text = list(filter(None, menu_text))
 
+    # Ditch strings which are integers: '1', '2', .. '6'
+    menu_text = [item for item in menu_text if not item.isdigit()]
+
     todays_menu = ["", f":ravintolabank: Bank {url}", ""]
     todays_menu.extend(menu_text)
     todays_menu.append("*Rush hour: 11:30*")
@@ -233,12 +236,17 @@ def lunch_pihka():
     children = weekly_menu.find_all("div", class_="menu-day")
 
     todays_menu = ["", f":pihka: Pihka {url}", ""]
-    print(today_en, tomorrow_en)
+    # print(today_en, tomorrow_en)
 
     # Get today's menu
     menu_text = get_submenu(children, today_en, tomorrow_en)[0]
-    menu_text = menu_text.replace("\n\n\n", "\n\n")
-    todays_menu.append(menu_text)
+    menu_text = menu_text.replace("\n\n\n", "\n").strip()
+
+    # No porridge
+    menu_text = menu_text.split("\n")
+    menu_text = [item for item in menu_text if "Morning porridge: " not in item]
+
+    todays_menu.extend(menu_text)
 
     return "\n".join(todays_menu)
 
@@ -315,9 +323,8 @@ def lunch_lounaat(restaurant):
     opening_hours = element.find("p.lunch", first=True).text
     item_body = element.find("div.item-body", first=True).text
     item_footer = element.find("div.item-footer", first=True).text
-    todays_menu.append(opening_hours)
     todays_menu.append(item_body)
-    todays_menu.append(item_footer)
+    todays_menu.append(opening_hours + " " + item_footer)
 
     return "\n".join(todays_menu)
 
