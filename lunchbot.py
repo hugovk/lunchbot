@@ -110,6 +110,15 @@ def day_name_fi(day_number):
         return "sunnuntai"
 
 
+def squeeze(char, text):
+    """Replace repeated characters with a single one
+        https://stackoverflow.com/a/3878698/724176
+    """
+    while char * 2 in text:
+        text = text.replace(char * 2, char)
+    return text
+
+
 def day_name_en(day_number):
     """Return the English day name for this day number"""
     return calendar.day_name[day_number]
@@ -168,9 +177,7 @@ def lunch_bank():
     today_class_name = f"lunch_{today_en.lower()}"
     todays_menu_div = weekly_menu.find("div", class_=today_class_name)
 
-    # Remove empty newlines
     menu_text = todays_menu_div.get_text().strip().split("\n")
-    menu_text = list(filter(None, menu_text))
 
     # Ditch strings which are integers: '1', '2', .. '6'
     menu_text = [item for item in menu_text if not item.isdigit()]
@@ -382,6 +389,11 @@ if __name__ == "__main__":
             print(restaurant)
             traceback.print_exc()
             continue
+
+        # Remove &nbsp; chars
+        menu = menu.replace("\xa0", "")
+        # Squeeze out repeated newlines
+        menu = squeeze("\n", menu)
 
         print(menu)
 
