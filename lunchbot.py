@@ -336,6 +336,44 @@ def lunch_lounaat(restaurant):
     return "\n".join(todays_menu)
 
 
+def do_restaurant(restaurant_function, dry_run, user):
+    """Get the menu for a restaurant and post to Slack"""
+    try:
+        menu = restaurant_function()
+    except AttributeError:
+        print(restaurant_function.__name__)
+        traceback.print_exc()
+        return
+
+    # Remove &nbsp; chars
+    menu = menu.replace("\xa0", "")
+    # Squeeze out repeated newlines
+    menu = squeeze("\n", menu)
+
+    print(menu)
+
+    # Escape ' like in "Pasta all'amatriciana" by
+    # replacing ' with '"'"'
+    # https://stackoverflow.com/a/1250279/724176
+    menu = menu.replace("'", "'\"'\"'")
+
+    if not dry_run:
+
+        if user:
+            target = f"-u {args.user}"
+        else:
+            target = "-c lunch"
+
+        slacker_cmd = ("slacker -t $LUNCHBOT_TOKEN -n LunchBot -i {} {}").format(
+            random.choice(EMOJI), target
+        )
+        # print(slacker_cmd)
+
+        cmd = f"echo '{menu}' | {slacker_cmd}"
+        # print(cmd.encode("utf8"))
+        os.system(cmd)
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="Post what's for lunch at local restaurants to Slack",
@@ -379,43 +417,12 @@ if __name__ == "__main__":
 
     for restaurant in restaurants:
 
-        try:
-            # Call function from a string
-            function = "lunch_" + restaurant
-            # Like calling lunch_savel()
-            menu = locals()[function]()
+        # Call function from a string
+        function = "lunch_" + restaurant
+        # Like getting lunch_savel()
+        restaurant_function = locals()[function]
 
-        except AttributeError:
-            print(restaurant)
-            traceback.print_exc()
-            continue
+        do_restaurant(restaurant_function, args.dry_run, args.user)
 
-        # Remove &nbsp; chars
-        menu = menu.replace("\xa0", "")
-        # Squeeze out repeated newlines
-        menu = squeeze("\n", menu)
-
-        print(menu)
-
-        # Escape ' like in "Pasta all'amatriciana" by
-        # replacing ' with '"'"'
-        # https://stackoverflow.com/a/1250279/724176
-        menu = menu.replace("'", "'\"'\"'")
-
-        if not args.dry_run:
-
-            if args.user:
-                target = f"-u {args.user}"
-            else:
-                target = "-c lunch"
-
-            slacker_cmd = ("slacker -t $LUNCHBOT_TOKEN -n LunchBot -i {} {}").format(
-                random.choice(EMOJI), target
-            )
-            # print(slacker_cmd)
-
-            cmd = f"echo '{menu}' | {slacker_cmd}"
-            # print(cmd.encode("utf8"))
-            os.system(cmd)
 
 # End of file
