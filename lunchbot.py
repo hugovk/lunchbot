@@ -14,7 +14,7 @@ import datetime
 import os
 import random
 import traceback
-from urllib.request import urlopen
+import urllib
 
 from bs4 import BeautifulSoup  # pip install BeautifulSoup4 lxml
 
@@ -126,7 +126,7 @@ def day_name_en(day_number):
 
 def get_soup(url):
     """Not that kind"""
-    page = urlopen(url)
+    page = urllib.request.urlopen(url)
     soup = BeautifulSoup(page.read(), "lxml")
     for br in soup.find_all("br"):
         br.replace_with("\n")
@@ -422,7 +422,12 @@ if __name__ == "__main__":
         # Like getting lunch_savel()
         restaurant_function = locals()[function]
 
-        do_restaurant(restaurant_function, args.dry_run, args.user)
-
+        tries = 0
+        while tries < 3:
+            tries += 1
+            try:
+                do_restaurant(restaurant_function, args.dry_run, args.user)
+            except urllib.error.HTTPError as e:
+                print(e)
 
 # End of file
