@@ -427,6 +427,7 @@ if __name__ == "__main__":
             tries += 1
             try:
                 do_restaurant(restaurant_function, args.dry_run, args.user)
+                break
             except urllib.error.HTTPError as e:
                 print(e)
 
