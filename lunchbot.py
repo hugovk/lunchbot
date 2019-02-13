@@ -11,17 +11,17 @@ See: https://github.com/juanpabloaj/slacker-cli#tokens
 import argparse
 import calendar
 import datetime
+import hashlib
+import json
 import os
 import random
 import traceback
 import urllib
 
-from bs4 import BeautifulSoup  # pip install BeautifulSoup4 lxml
-
-from requests_html import HTMLSession  # pip install requests-html
-
 # from pprint import pprint
 
+from bs4 import BeautifulSoup  # pip install BeautifulSoup4 lxml
+from requests_html import HTMLSession  # pip install requests-html
 
 BANK_URL = "http://www.ravintolabank.fi/en/lunch-club-en/"
 KAARTI_URL = "http://www.ravintolakaarti.fi/lounas"
@@ -110,6 +110,15 @@ def day_name_fi(day_number):
         return "sunnuntai"
 
 
+def dopplr(name):
+    """
+    Take the MD5 digest of a name,
+    convert it to hex and take the
+    first 6 characters as an RGB value.
+    """
+    return "#" + hashlib.sha224(name.encode()).hexdigest()[:6]
+
+
 def squeeze(char, text):
     """Replace repeated characters with a single one
         https://stackoverflow.com/a/3878698/724176
@@ -167,6 +176,7 @@ def lunch_bank():
     """
     Get the lunch menu from Bank
     """
+    title = ":ravintolabank: Bank"
     url = BANK_URL
     soup = get_soup(url)
 
@@ -182,24 +192,25 @@ def lunch_bank():
     # Ditch strings which are integers: '1', '2', .. '6'
     menu_text = [item for item in menu_text if not item.isdigit()]
 
-    todays_menu = ["", f":ravintolabank: Bank {url}", ""]
+    todays_menu = [url]
     todays_menu.extend(menu_text)
     todays_menu.append("*Rush hour: 11:30*")
 
-    return "\n".join(todays_menu)
+    return title, "\n".join(todays_menu)
 
 
 def lunch_kaarti():
     """
     Get the lunch menu from Kaarti
     """
+    title = ":kaarti: Kaarti"
     url = KAARTI_URL
     soup = get_soup(url)
 
     # Weekly menu is in <div id="column1Content"><div class>
     weekly_menu = soup.find("div", id="column1Content")
     children = weekly_menu.findAll("p")
-    todays_menu = ["", f":kaarti: Kaarti {url}", ""]
+    todays_menu = [url]
 
     # Get today's menu
     kaarti_menu = get_submenu(children, today_fi, tomorrow_fi)
@@ -209,13 +220,14 @@ def lunch_kaarti():
 
     todays_menu.extend(kaarti_menu)
 
-    return "\n".join(todays_menu)
+    return title, "\n".join(todays_menu)
 
 
 def lunch_kuukuu():
     """
     Get the lunch menu from KuuKuu
     """
+    title = ":kuukuu: KuuKuu"
     url = KUUKUU_URL
     soup = get_soup(url)
 
@@ -223,18 +235,19 @@ def lunch_kuukuu():
     weekly_menu = soup.findAll("section")[1]
 
     children = weekly_menu.findAll("p")
-    todays_menu = ["", f":kuukuu: KuuKuu {url}", ""]
+    todays_menu = [url]
 
     # Get today's menu
     todays_menu.extend(get_submenu(children, today_fi, tomorrow_fi))
 
-    return "\n".join(todays_menu)
+    return title, "\n".join(todays_menu)
 
 
 def lunch_pihka():
     """
     Get the lunch menu from Pihka
     """
+    title = ":pihka: Pihka"
     url = PIHKA_URL
     soup = get_soup(url)
 
@@ -242,7 +255,7 @@ def lunch_pihka():
     weekly_menu = soup.find("div", id="primary")
     children = weekly_menu.find_all("div", class_="menu-day")
 
-    todays_menu = ["", f":pihka: Pihka {url}", ""]
+    todays_menu = [url]
     # print(today_en, tomorrow_en)
 
     # Get today's menu
@@ -255,13 +268,14 @@ def lunch_pihka():
 
     todays_menu.extend(menu_text)
 
-    return "\n".join(todays_menu)
+    return title, "\n".join(todays_menu)
 
 
 def lunch_savel():
     """
     Get the lunch menu from Sävel
     """
+    title = ":savel: Sävel"
     url = SAVEL_URL
     soup = get_soup(url)
 
@@ -269,7 +283,7 @@ def lunch_savel():
     weekly_menu = soup.find("div", class_="menu-box")
     weekly_menu = weekly_menu.find("div", class_="wysiwyg")
     children = weekly_menu.findChildren()
-    todays_menu = ["", f":savel: Sävel {url}", ""]
+    todays_menu = [url]
 
     # Get the stuff before Monday: weekly burger
     todays_menu.extend(get_submenu(children, "viikon burgerit:", monday))
@@ -278,25 +292,26 @@ def lunch_savel():
     # Get today's menu
     todays_menu.extend(get_submenu(children, today_fi, tomorrow_fi))
 
-    return "\n".join(todays_menu)
+    return title, "\n".join(todays_menu)
 
 
 def lunch_sogno():
     """
     Get the lunch menu from Sogno
     """
+    title = ":sogno: Sogno"
     url = SOGNO_URL
     soup = get_soup(url)
 
     # Weekly menu is in <div class="mainTextWidgetContent">
     weekly_menu = soup.find("div", class_="mainTextWidgetContent")
     children = weekly_menu.findAll("p")
-    todays_menu = ["", f":sogno: Sogno {url}", ""]
+    todays_menu = [url]
 
     # Get today's menu
     todays_menu.extend(get_submenu(children, today_fi, tomorrow_fi))
 
-    return "\n".join(todays_menu)
+    return title, "\n".join(todays_menu)
 
 
 def lunch_pompier():
@@ -326,20 +341,22 @@ def lunch_lounaat(restaurant):
     url = f"https://www.lounaat.info{path}"
 
     emoji = restaurant.replace(" ", "_")
-    todays_menu = ["", f":{emoji}: {restaurant} {url}", ""]
+    title = f":{emoji}: {restaurant}"
+
+    todays_menu = [url]
     opening_hours = element.find("p.lunch", first=True).text
     item_body = element.find("div.item-body", first=True).text
     item_footer = element.find("div.item-footer", first=True).text
     todays_menu.append(item_body)
     todays_menu.append(opening_hours + " " + item_footer)
 
-    return "\n".join(todays_menu)
+    return title, "\n".join(todays_menu)
 
 
-def do_restaurant(restaurant_function, dry_run, user):
+def do_restaurant(restaurant_name, restaurant_function, dry_run, user):
     """Get the menu for a restaurant and post to Slack"""
     try:
-        menu = restaurant_function()
+        title, menu = restaurant_function()
     except AttributeError:
         print(restaurant_function.__name__)
         traceback.print_exc()
@@ -357,6 +374,10 @@ def do_restaurant(restaurant_function, dry_run, user):
     # https://stackoverflow.com/a/1250279/724176
     menu = menu.replace("'", "'\"'\"'")
 
+    colour = dopplr(restaurant_name)
+    attachment = [{"color": colour, "fields": [{"title": title, "value": menu}]}]
+    attachments = f"attachments='{json.dumps(attachment)}'"
+
     if not dry_run:
 
         if user:
@@ -364,12 +385,12 @@ def do_restaurant(restaurant_function, dry_run, user):
         else:
             target = "-c lunch"
 
-        slacker_cmd = ("slacker -t $LUNCHBOT_TOKEN -n LunchBot -i {} {}").format(
-            random.choice(EMOJI), target
+        slacker_cmd = ("slacker -t $LUNCHBOT_TOKEN -n LunchBot -i {} {} {}").format(
+            random.choice(EMOJI), target, attachments
         )
         # print(slacker_cmd)
 
-        cmd = f"echo '{menu}' | {slacker_cmd}"
+        cmd = f"echo '' | {slacker_cmd}"
         # print(cmd.encode("utf8"))
         os.system(cmd)
 
@@ -426,7 +447,7 @@ if __name__ == "__main__":
         while tries < 3:
             tries += 1
             try:
-                do_restaurant(restaurant_function, args.dry_run, args.user)
+                do_restaurant(restaurant, restaurant_function, args.dry_run, args.user)
                 break
             except urllib.error.HTTPError as e:
                 print(e)
