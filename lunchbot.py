@@ -468,6 +468,9 @@ if __name__ == "__main__":
                 print(e)
 
     if args.json:
+        all_output["updated"] = datetime.datetime.utcnow().strftime(
+            "%A, %d %B %Y, %X UTC"
+        )
         with open("lunch.json", "w") as outfile:
             json.dump(all_output, outfile)
 
