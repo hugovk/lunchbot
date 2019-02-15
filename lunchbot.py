@@ -426,6 +426,7 @@ if __name__ == "__main__":
     )
     parser.add_argument("-j", "--json", action="store_true", help="Save data as JSON")
     args = parser.parse_args()
+    print(args)
 
     # Get Monday, today and tomorrow in Finnish
     today_number = datetime.datetime.today().weekday()
