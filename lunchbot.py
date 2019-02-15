@@ -355,6 +355,7 @@ def lunch_lounaat(restaurant):
 
 def do_restaurant(restaurant_name, restaurant_function, dry_run, user):
     """Get the menu for a restaurant and post to Slack"""
+    output = {}
     try:
         title, menu, url = restaurant_function()
     except AttributeError:
@@ -366,6 +367,10 @@ def do_restaurant(restaurant_name, restaurant_function, dry_run, user):
     menu = menu.replace("\xa0", "")
     # Squeeze out repeated newlines
     menu = squeeze("\n", menu)
+
+    output["title"] = title
+    output["menu"] = menu
+    output["url"] = url
 
     # Escape ' like in "Pasta all'amatriciana" by
     # replacing ' with '"'"'
@@ -397,6 +402,8 @@ def do_restaurant(restaurant_name, restaurant_function, dry_run, user):
         # print(cmd.encode("utf8"))
         os.system(cmd)
 
+    return output
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
@@ -417,6 +424,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "-n", "--dry-run", action="store_true", help="Don't post to Slack"
     )
+    parser.add_argument("-j", "--json", action="store_true", help="Save data as JSON")
     args = parser.parse_args()
 
     # Get Monday, today and tomorrow in Finnish
@@ -439,6 +447,7 @@ if __name__ == "__main__":
         restaurants = args.restaurants
     random.shuffle(restaurants)
 
+    all_output = {}
     for restaurant in restaurants:
 
         # Call function from a string
@@ -450,9 +459,17 @@ if __name__ == "__main__":
         while tries < 3:
             tries += 1
             try:
-                do_restaurant(restaurant, restaurant_function, args.dry_run, args.user)
+                output = do_restaurant(
+                    restaurant, restaurant_function, args.dry_run, args.user
+                )
+                all_output[restaurant] = output
                 break
             except urllib.error.HTTPError as e:
                 print(e)
+
+    if args.json:
+        with open("lunch.json", "w") as outfile:
+            json.dump(all_output, outfile)
+
 
 # End of file
