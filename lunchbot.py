@@ -192,11 +192,11 @@ def lunch_bank():
     # Ditch strings which are integers: '1', '2', .. '6'
     menu_text = [item for item in menu_text if not item.isdigit()]
 
-    todays_menu = [url]
+    todays_menu = []
     todays_menu.extend(menu_text)
     todays_menu.append("*Rush hour: 11:30*")
 
-    return title, "\n".join(todays_menu)
+    return title, "\n".join(todays_menu), url
 
 
 def lunch_kaarti():
@@ -210,7 +210,7 @@ def lunch_kaarti():
     # Weekly menu is in <div id="column1Content"><div class>
     weekly_menu = soup.find("div", id="column1Content")
     children = weekly_menu.findAll("p")
-    todays_menu = [url]
+    todays_menu = []
 
     # Get today's menu
     kaarti_menu = get_submenu(children, today_fi, tomorrow_fi)
@@ -220,7 +220,7 @@ def lunch_kaarti():
 
     todays_menu.extend(kaarti_menu)
 
-    return title, "\n".join(todays_menu)
+    return title, "\n".join(todays_menu), url
 
 
 def lunch_kuukuu():
@@ -235,12 +235,12 @@ def lunch_kuukuu():
     weekly_menu = soup.findAll("section")[1]
 
     children = weekly_menu.findAll("p")
-    todays_menu = [url]
+    todays_menu = []
 
     # Get today's menu
     todays_menu.extend(get_submenu(children, today_fi, tomorrow_fi))
 
-    return title, "\n".join(todays_menu)
+    return title, "\n".join(todays_menu), url
 
 
 def lunch_pihka():
@@ -255,7 +255,7 @@ def lunch_pihka():
     weekly_menu = soup.find("div", id="primary")
     children = weekly_menu.find_all("div", class_="menu-day")
 
-    todays_menu = [url]
+    todays_menu = []
     # print(today_en, tomorrow_en)
 
     # Get today's menu
@@ -268,7 +268,7 @@ def lunch_pihka():
 
     todays_menu.extend(menu_text)
 
-    return title, "\n".join(todays_menu)
+    return title, "\n".join(todays_menu), url
 
 
 def lunch_savel():
@@ -283,7 +283,7 @@ def lunch_savel():
     weekly_menu = soup.find("div", class_="menu-box")
     weekly_menu = weekly_menu.find("div", class_="wysiwyg")
     children = weekly_menu.findChildren()
-    todays_menu = [url]
+    todays_menu = []
 
     # Get the stuff before Monday: weekly burger
     todays_menu.extend(get_submenu(children, "viikon burgerit:", monday))
@@ -292,7 +292,7 @@ def lunch_savel():
     # Get today's menu
     todays_menu.extend(get_submenu(children, today_fi, tomorrow_fi))
 
-    return title, "\n".join(todays_menu)
+    return title, "\n".join(todays_menu), url
 
 
 def lunch_sogno():
@@ -306,12 +306,12 @@ def lunch_sogno():
     # Weekly menu is in <div class="mainTextWidgetContent">
     weekly_menu = soup.find("div", class_="mainTextWidgetContent")
     children = weekly_menu.findAll("p")
-    todays_menu = [url]
+    todays_menu = []
 
     # Get today's menu
     todays_menu.extend(get_submenu(children, today_fi, tomorrow_fi))
 
-    return title, "\n".join(todays_menu)
+    return title, "\n".join(todays_menu), url
 
 
 def lunch_pompier():
@@ -343,20 +343,20 @@ def lunch_lounaat(restaurant):
     emoji = restaurant.replace(" ", "_")
     title = f":{emoji}: {restaurant}"
 
-    todays_menu = [url]
+    todays_menu = []
     opening_hours = element.find("p.lunch", first=True).text
     item_body = element.find("div.item-body", first=True).text
     item_footer = element.find("div.item-footer", first=True).text
     todays_menu.append(item_body)
     todays_menu.append(opening_hours + " " + item_footer)
 
-    return title, "\n".join(todays_menu)
+    return title, "\n".join(todays_menu), url
 
 
 def do_restaurant(restaurant_name, restaurant_function, dry_run, user):
     """Get the menu for a restaurant and post to Slack"""
     try:
-        title, menu = restaurant_function()
+        title, menu, url = restaurant_function()
     except AttributeError:
         print(restaurant_function.__name__)
         traceback.print_exc()
@@ -367,12 +367,15 @@ def do_restaurant(restaurant_name, restaurant_function, dry_run, user):
     # Squeeze out repeated newlines
     menu = squeeze("\n", menu)
 
-    print(menu)
-
     # Escape ' like in "Pasta all'amatriciana" by
     # replacing ' with '"'"'
     # https://stackoverflow.com/a/1250279/724176
     menu = menu.replace("'", "'\"'\"'")
+
+    menu += "\n{}".format(url)
+    print(title)
+    print(menu)
+    print()
 
     colour = dopplr(restaurant_name)
     attachment = [{"color": colour, "fields": [{"title": title, "value": menu}]}]
