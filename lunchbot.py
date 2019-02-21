@@ -32,7 +32,7 @@ SAVEL_URL = "http://toolonsavel.fi/menu/?lang=fi#lounas"
 SOGNO_URL = "http://www.trattoriasogno.fi/lounas"
 
 # RESTAURANTS = ["kaarti", "kuukuu", "savel", "sogno"]
-RESTAURANTS = ["bank", "pihka", "pompier", "presto"]
+RESTAURANTS = ["bank", "cantinawest", "cock", "pihka", "pompier", "presto"]
 
 EMOJI = [
     ":fork_and_knife:",
@@ -199,6 +199,14 @@ def lunch_bank():
     return title, "\n".join(todays_menu), url
 
 
+def lunch_cantinawest():
+    return lunch_lounaat("Cantina West")
+
+
+def lunch_cock():
+    return lunch_lounaat("The Cock")
+
+
 def lunch_kaarti():
     """
     Get the lunch menu from Kaarti
@@ -340,7 +348,7 @@ def lunch_lounaat(restaurant):
     path = element.find("h3 a")[0].attrs["href"]  # eg. '/lounas/presto/helsinki'
     url = f"https://www.lounaat.info{path}"
 
-    emoji = restaurant.replace(" ", "_")
+    emoji = restaurant.replace(" ", "")
     title = f":{emoji}: {restaurant}"
 
     todays_menu = []
