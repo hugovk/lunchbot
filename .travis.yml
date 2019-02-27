@@ -16,7 +16,7 @@ install:
 script:
 
  # Dry run
- - python lunchbot.py --dry-run
+ - python lunchbot.py --dry-run --json
 
  # Static analysis
  - flake8 --statistics --count
