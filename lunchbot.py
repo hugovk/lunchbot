@@ -176,7 +176,8 @@ def lunch_bank():
     """
     Get the lunch menu from Bank
     """
-    title = ":ravintolabank: Bank"
+    title = "Bank"
+    emoji = ":ravintolabank:"
     url = BANK_URL
     soup = get_soup(url)
 
@@ -196,7 +197,7 @@ def lunch_bank():
     todays_menu.extend(menu_text)
     todays_menu.append("*Rush hour: 11:30*")
 
-    return title, "\n".join(todays_menu), url
+    return title, emoji, "\n".join(todays_menu), url
 
 
 def lunch_cantinawest():
@@ -211,7 +212,8 @@ def lunch_kaarti():
     """
     Get the lunch menu from Kaarti
     """
-    title = ":kaarti: Kaarti"
+    title = "Kaarti"
+    emoji = ":kaarti:"
     url = KAARTI_URL
     soup = get_soup(url)
 
@@ -228,14 +230,15 @@ def lunch_kaarti():
 
     todays_menu.extend(kaarti_menu)
 
-    return title, "\n".join(todays_menu), url
+    return title, emoji, "\n".join(todays_menu), url
 
 
 def lunch_kuukuu():
     """
     Get the lunch menu from KuuKuu
     """
-    title = ":kuukuu: KuuKuu"
+    title = "KuuKuu"
+    emoji = ":kuukuu:"
     url = KUUKUU_URL
     soup = get_soup(url)
 
@@ -248,14 +251,15 @@ def lunch_kuukuu():
     # Get today's menu
     todays_menu.extend(get_submenu(children, today_fi, tomorrow_fi))
 
-    return title, "\n".join(todays_menu), url
+    return title, emoji, "\n".join(todays_menu), url
 
 
 def lunch_pihka():
     """
     Get the lunch menu from Pihka
     """
-    title = ":pihka: Pihka"
+    title = "Pihka"
+    emoji = ":pihka:"
     url = PIHKA_URL
     soup = get_soup(url)
 
@@ -276,14 +280,15 @@ def lunch_pihka():
 
     todays_menu.extend(menu_text)
 
-    return title, "\n".join(todays_menu), url
+    return title, emoji, "\n".join(todays_menu), url
 
 
 def lunch_savel():
     """
     Get the lunch menu from Sävel
     """
-    title = ":savel: Sävel"
+    title = "Sävel"
+    emoji = ":savel:"
     url = SAVEL_URL
     soup = get_soup(url)
 
@@ -300,14 +305,15 @@ def lunch_savel():
     # Get today's menu
     todays_menu.extend(get_submenu(children, today_fi, tomorrow_fi))
 
-    return title, "\n".join(todays_menu), url
+    return title, emoji, "\n".join(todays_menu), url
 
 
 def lunch_sogno():
     """
     Get the lunch menu from Sogno
     """
-    title = ":sogno: Sogno"
+    title = "Sogno"
+    emoji = ":sogno:"
     url = SOGNO_URL
     soup = get_soup(url)
 
@@ -319,7 +325,7 @@ def lunch_sogno():
     # Get today's menu
     todays_menu.extend(get_submenu(children, today_fi, tomorrow_fi))
 
-    return title, "\n".join(todays_menu), url
+    return title, emoji, "\n".join(todays_menu), url
 
 
 def lunch_pompier():
@@ -348,8 +354,8 @@ def lunch_lounaat(restaurant):
     path = element.find("h3 a")[0].attrs["href"]  # eg. '/lounas/presto/helsinki'
     url = f"https://www.lounaat.info{path}"
 
-    emoji = restaurant.replace(" ", "")
-    title = f":{emoji}: {restaurant}"
+    emoji = f':{restaurant.replace(" ", "")}:'
+    title = restaurant
 
     todays_menu = []
     opening_hours = element.find("p.lunch", first=True).text
@@ -358,14 +364,14 @@ def lunch_lounaat(restaurant):
     todays_menu.append(item_body)
     todays_menu.append(opening_hours + " " + item_footer)
 
-    return title, "\n".join(todays_menu), url
+    return title, emoji, "\n".join(todays_menu), url
 
 
 def do_restaurant(restaurant_name, restaurant_function, dry_run, user):
     """Get the menu for a restaurant and post to Slack"""
     output = {}
     try:
-        title, menu, url = restaurant_function()
+        title, emoji, menu, url = restaurant_function()
     except AttributeError:
         print(restaurant_function.__name__)
         traceback.print_exc()
@@ -386,12 +392,14 @@ def do_restaurant(restaurant_name, restaurant_function, dry_run, user):
     menu = menu.replace("'", "'\"'\"'")
 
     menu += f"\n{url}"
-    print(title)
+    print(emoji, title)
     print(menu)
     print()
 
     colour = dopplr(restaurant_name)
-    attachment = [{"color": colour, "fields": [{"title": title, "value": menu}]}]
+    attachment = [
+        {"color": colour, "fields": [{"title": f"{emoji} {title}", "value": menu}]}
+    ]
     attachments = f"attachments='{json.dumps(attachment)}'"
 
     if not dry_run:
