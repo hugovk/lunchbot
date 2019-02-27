@@ -385,7 +385,7 @@ def do_restaurant(restaurant_name, restaurant_function, dry_run, user):
     # https://stackoverflow.com/a/1250279/724176
     menu = menu.replace("'", "'\"'\"'")
 
-    menu += "\n{}".format(url)
+    menu += f"\n{url}"
     print(title)
     print(menu)
     print()
@@ -457,6 +457,7 @@ if __name__ == "__main__":
     random.shuffle(restaurants)
 
     all_output = {}
+    all_output["menus"] = []
     for restaurant in restaurants:
 
         # Call function from a string
@@ -471,7 +472,7 @@ if __name__ == "__main__":
                 output = do_restaurant(
                     restaurant, restaurant_function, args.dry_run, args.user
                 )
-                all_output[restaurant] = output
+                all_output["menus"].append(output)
                 break
             except urllib.error.HTTPError as e:
                 print(e)
