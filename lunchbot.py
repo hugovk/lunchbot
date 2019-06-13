@@ -32,7 +32,7 @@ SAVEL_URL = "http://toolonsavel.fi/menu/?lang=fi#lounas"
 SOGNO_URL = "http://www.trattoriasogno.fi/lounas"
 
 # RESTAURANTS = ["kaarti", "kuukuu", "savel", "sogno"]
-RESTAURANTS = ["bank", "cantinawest", "cock", "pihka", "pompier", "presto"]
+RESTAURANTS = ["bank", "cock", "pihka", "pompier", "presto"]
 
 EMOJI = [
     ":fork_and_knife:",
@@ -198,10 +198,6 @@ def lunch_bank():
     todays_menu.append("*Rush hour: 11:30*")
 
     return title, emoji, "\n".join(todays_menu), url
-
-
-def lunch_cantinawest():
-    return lunch_lounaat("Cantina West")
 
 
 def lunch_cock():
