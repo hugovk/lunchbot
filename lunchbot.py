@@ -32,7 +32,7 @@ SAVEL_URL = "http://toolonsavel.fi/menu/?lang=fi#lounas"
 SOGNO_URL = "http://www.trattoriasogno.fi/lounas"
 
 # RESTAURANTS = ["kaarti", "kuukuu", "savel", "sogno"]
-RESTAURANTS = ["bank", "cock", "pihka", "pompier", "presto"]
+RESTAURANTS = ["bank", "cock", "factory-aleksi", "pihka", "pompier", "presto"]
 
 EMOJI = [
     ":fork_and_knife:",
@@ -202,6 +202,10 @@ def lunch_bank():
 
 def lunch_cock():
     return lunch_lounaat("The Cock")
+
+
+def lunch_factory_aleksi():
+    return lunch_lounaat("Factory Aleksi")
 
 
 def lunch_kaarti():
@@ -465,7 +469,7 @@ if __name__ == "__main__":
     for restaurant in restaurants:
 
         # Call function from a string
-        function = "lunch_" + restaurant
+        function = "lunch_" + restaurant.replace("-", "_")
         # Like getting lunch_savel()
         restaurant_function = locals()[function]
 
