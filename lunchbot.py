@@ -90,6 +90,13 @@ EMOJI = [
 LOUNAAT_RESPONSE = None
 
 
+def pause(reopen_date):
+    """Return true if before this yyyy-mm-dd date"""
+    reopen_date = datetime.datetime.strptime(reopen_date, "%Y-%m-%d")
+    now = datetime.datetime.now()
+    return now.date() < reopen_date.date()
+
+
 def day_name_fi(day_number):
     """Return the Finnish day name for this day number"""
     # Could use locale, but it's a bit fiddly depending on Mac/Windows
@@ -201,6 +208,8 @@ def lunch_bank():
 
 
 def lunch_cock():
+    if pause("2019-08-12"):
+        return None
     return lunch_lounaat("The Cock")
 
 
@@ -333,6 +342,8 @@ def lunch_pompier():
 
 
 def lunch_presto():
+    if pause("2019-07-01"):
+        return None
     return lunch_lounaat("Presto")
 
 
@@ -371,7 +382,11 @@ def do_restaurant(restaurant_name, restaurant_function, dry_run, user):
     """Get the menu for a restaurant and post to Slack"""
     output = {}
     try:
-        title, emoji, menu, url = restaurant_function()
+        ret = restaurant_function()
+        if ret is None:
+            print("Skip", restaurant_function.__name__)
+            return
+        title, emoji, menu, url = ret
     except AttributeError:
         print(restaurant_function.__name__)
         traceback.print_exc()
