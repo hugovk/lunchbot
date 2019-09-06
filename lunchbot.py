@@ -32,7 +32,8 @@ SAVEL_URL = "http://toolonsavel.fi/menu/?lang=fi#lounas"
 SOGNO_URL = "http://www.trattoriasogno.fi/lounas"
 
 # RESTAURANTS = ["kaarti", "kuukuu", "savel", "sogno"]
-RESTAURANTS = ["bank", "cock", "factory-aleksi", "pihka", "pompier", "presto"]
+# RESTAURANTS = ["bank", "cock", "factory-aleksi", "pihka", "pompier", "presto"]
+RESTAURANTS = ["cock", "factory-aleksi", "pihka", "pompier", "presto"]
 
 EMOJI = [
     ":fork_and_knife:",
