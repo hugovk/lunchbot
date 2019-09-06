@@ -268,29 +268,7 @@ def lunch_pihka():
     """
     Get the lunch menu from Pihka
     """
-    title = "Pihka"
-    emoji = ":pihka:"
-    url = PIHKA_URL
-    soup = get_soup(url)
-
-    # Weekly menu is in <div id="primary">
-    weekly_menu = soup.find("div", id="primary")
-    children = weekly_menu.find_all("div", class_="menu-day")
-
-    todays_menu = []
-    # print(today_en, tomorrow_en)
-
-    # Get today's menu
-    menu_text = get_submenu(children, today_en, tomorrow_en)[0]
-    menu_text = menu_text.replace("\n\n\n", "\n").strip()
-
-    # No porridge
-    menu_text = menu_text.split("\n")
-    menu_text = [item for item in menu_text if "Morning porridge: " not in item]
-
-    todays_menu.extend(menu_text)
-
-    return title, emoji, "\n".join(todays_menu), url
+    return lunch_lounaat("Pihka Kasarmi")
 
 
 def lunch_savel():
