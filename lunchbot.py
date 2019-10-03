@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# encoding: utf-8
 """
 Check what's for lunch at local restaurants and post to Slack
 
@@ -17,8 +16,7 @@ import os
 import random
 import traceback
 import urllib
-
-# from pprint import pprint
+from pprint import pprint  # noqa: F401
 
 from bs4 import BeautifulSoup  # pip install BeautifulSoup4 lxml
 from requests_html import HTMLSession  # pip install requests-html
