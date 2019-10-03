@@ -1,5 +1,4 @@
 #!/usr/bin/env python
-# encoding: utf-8
 """
 Check what's for lunch at local restaurants and post to Slack
 
@@ -17,13 +16,11 @@ import os
 import random
 import traceback
 import urllib
-
-# from pprint import pprint
+from pprint import pprint  # noqa: F401
 
 from bs4 import BeautifulSoup  # pip install BeautifulSoup4 lxml
 from requests_html import HTMLSession  # pip install requests-html
 
-BANK_URL = "http://www.ravintolabank.fi/en/lunch-club-en/"
 KAARTI_URL = "http://www.ravintolakaarti.fi/lounas"
 KUUKUU_URL = "https://www.kuukuu.fi/fi/lounas"
 LOUNAAT_URL = "https://www.lounaat.info/kasarmikatu-42-00130-helsinki"
@@ -32,8 +29,7 @@ SAVEL_URL = "http://toolonsavel.fi/menu/?lang=fi#lounas"
 SOGNO_URL = "http://www.trattoriasogno.fi/lounas"
 
 # RESTAURANTS = ["kaarti", "kuukuu", "savel", "sogno"]
-# RESTAURANTS = ["bank", "cock", "factory-aleksi", "pihka", "pompier", "presto"]
-RESTAURANTS = ["cock", "factory-aleksi", "pihka", "pompier", "presto"]
+RESTAURANTS = ["bank", "cock", "factory-aleksi", "pihka", "pompier", "presto"]
 
 EMOJI = [
     ":fork_and_knife:",
@@ -181,31 +177,7 @@ def get_submenu(children, start, end):
 
 
 def lunch_bank():
-    """
-    Get the lunch menu from Bank
-    """
-    title = "Bank"
-    emoji = ":ravintolabank:"
-    url = BANK_URL
-    soup = get_soup(url)
-
-    # Weekly menu is in <div class="lunch-list">
-    weekly_menu = soup.find("div", class_="lunch-list")
-
-    # Daily menu is in <div class="lunch lunch_monday">
-    today_class_name = f"lunch_{today_en.lower()}"
-    todays_menu_div = weekly_menu.find("div", class_=today_class_name)
-
-    menu_text = todays_menu_div.get_text().strip().split("\n")
-
-    # Ditch strings which are integers: '1', '2', .. '6'
-    menu_text = [item for item in menu_text if not item.isdigit()]
-
-    todays_menu = []
-    todays_menu.extend(menu_text)
-    todays_menu.append("*Rush hour: 11:30*")
-
-    return title, emoji, "\n".join(todays_menu), url
+    return lunch_lounaat("Bank Lunch Club")
 
 
 def lunch_cock():
