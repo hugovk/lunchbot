@@ -362,8 +362,6 @@ def lunch_pasila(restaurant):
         session = HTMLSession()
         LOUNAAT_RESPONSE = session.get(url)
 
-    weekDays = ("Maanantaina","Tiistaina","Keskiviikkona","Torstaina","Perjantaina")
-
     today_number = datetime.datetime.today().weekday()
     element = LOUNAAT_RESPONSE.html.find("div.item", containing=day_name_fi(today_number), first=True)
 
