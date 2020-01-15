@@ -353,7 +353,7 @@ def lunch_factory_vallila():
 
 
 def lunch_viherlatva():
-    return lunch_pasila("Fazer Food & Co Viherlatva")
+    return lunch_pasila("Viherlatva")
 
 
 def lunch_savor_vallila():
