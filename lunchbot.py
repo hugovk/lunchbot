@@ -35,19 +35,21 @@ PIHKA_URL = "https://kasarmi.pihka.fi/en/"
 SAVEL_URL = "http://toolonsavel.fi/menu/?lang=fi#lounas"
 SOGNO_URL = "http://www.trattoriasogno.fi/lounas"
 
-# RESTAURANTS = ["kaarti", "kuukuu", "savel", "sogno"]
-RESTAURANTS = [
+KASSU = [
     "bank",
     "cock",
     "factory-aleksi",
     "pihka",
     "pompier",
     "presto",
-    "factory-vallila",
-    "viherlatva",
-    "savor-vallila",
-    "antell-akavatalo",
 ]
+PASILA = [
+    "antell-akavatalo",
+    "factory-vallila",
+    "savor-vallila",
+    "viherlatva",
+]
+RESTAURANTS = KASSU + PASILA
 
 EMOJI = [
     ":fork_and_knife:",
@@ -466,6 +468,12 @@ if __name__ == "__main__":
         help="Which restaurants to check",
     )
     parser.add_argument(
+        "--kassu", action="store_true", help="Shortcut for the restaurants near Kassu"
+    )
+    parser.add_argument(
+        "--pasila", action="store_true", help="Shortcut for the restaurants in Pasila"
+    )
+    parser.add_argument(
         "-u", "--user", help="Send to this Slack user instead of the lunch channel"
     )
     parser.add_argument(
@@ -474,6 +482,11 @@ if __name__ == "__main__":
     parser.add_argument("-j", "--json", action="store_true", help="Save data as JSON")
     args = parser.parse_args()
     print(args)
+
+    if args.kassu:
+        args.restaurants = KASSU
+    elif args.pasila:
+        args.restaurants = PASILA
 
     # Get Monday, today and tomorrow in Finnish
     today_number = datetime.datetime.today().weekday()
