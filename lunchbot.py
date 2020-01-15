@@ -396,7 +396,7 @@ def lunch_pasila(restaurant):
     return title, emoji, "\n".join(todays_menu), url
 
 
-def do_restaurant(restaurant_name, restaurant_function, dry_run, user):
+def do_restaurant(restaurant_name, restaurant_function, dry_run, target):
     """Get the menu for a restaurant and post to Slack"""
     output = {}
     try:
@@ -437,11 +437,6 @@ def do_restaurant(restaurant_name, restaurant_function, dry_run, user):
 
     if not dry_run:
 
-        if user:
-            target = f"-u {args.user}"
-        else:
-            target = "-c lunch"
-
         slacker_cmd = ("slacker -t $LUNCHBOT_TOKEN -n LunchBot -i {} {} {}").format(
             random.choice(EMOJI), target, attachments
         )
@@ -474,7 +469,10 @@ if __name__ == "__main__":
         "--pasila", action="store_true", help="Shortcut for the restaurants in Pasila"
     )
     parser.add_argument(
-        "-u", "--user", help="Send to this Slack user instead of the lunch channel"
+        "-u", "--user", help="Send to this Slack user instead of #lunch"
+    )
+    parser.add_argument(
+        "-c", "--channel", help="Send to this Slack channel instead of #lunch"
     )
     parser.add_argument(
         "-n", "--dry-run", action="store_true", help="Don't post to Slack"
@@ -508,6 +506,13 @@ if __name__ == "__main__":
         restaurants = args.restaurants
     random.shuffle(restaurants)
 
+    if args.user:
+        target = f"-u {args.user}"
+    if args.channel:
+        target = f"-c {args.channel}"
+    else:
+        target = "-c lunch"
+
     all_output = {}
     all_output["menus"] = []
     for restaurant in restaurants:
@@ -522,7 +527,7 @@ if __name__ == "__main__":
             tries += 1
             try:
                 output = do_restaurant(
-                    restaurant, restaurant_function, args.dry_run, args.user
+                    restaurant, restaurant_function, args.dry_run, target
                 )
                 all_output["menus"].append(output)
                 break
