@@ -2,10 +2,8 @@ language: python
 dist: xenial
 cache: pip
 
-# Supported CPython versions:
-# https://en.wikipedia.org/wiki/CPython#Version_history
 python:
- - 3.8-dev
+ - 3.8
  - 3.7
  - 3.6
 
