@@ -365,17 +365,17 @@ def lunch_antell_akavatalo():
 
 
 def lunch_pasila(restaurant):
-    global LOUNAAT_RESPONSE
+    PASILA_LOUNAAT_RESPONSE = None
 
     url = LOUNAAT_PASILA_URLS[restaurant]
 
-    if not LOUNAAT_RESPONSE:
+    if not PASILA_LOUNAAT_RESPONSE:
         # Requests-HTML is easier than Requests + Beautiful Soup
         session = HTMLSession()
-        LOUNAAT_RESPONSE = session.get(url)
+        PASILA_LOUNAAT_RESPONSE = session.get(url)
 
     today_number = datetime.datetime.today().weekday()
-    element = LOUNAAT_RESPONSE.html.find(
+    element = PASILA_LOUNAAT_RESPONSE.html.find(
         "div.item", containing=day_name_fi(today_number), first=True
     )
 
@@ -383,8 +383,8 @@ def lunch_pasila(restaurant):
     title = restaurant
 
     todays_menu = []
-    opening_hours = LOUNAAT_RESPONSE.html.find(
-        "div.tile", containing="ma-pe", first=True
+    opening_hours = PASILA_LOUNAAT_RESPONSE.html.find(
+        "div.tile", containing="ma-", first=True
     ).text
     item_body = element.find("div.item-body", first=True).text
     item_footer = element.find("div.item-footer", first=True).text
