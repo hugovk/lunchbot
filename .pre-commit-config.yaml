@@ -9,6 +9,7 @@ repos:
     rev: 19.10b0
     hooks:
       - id: black
+        args: ["--target-version", "py36"]
         # override until resolved: https://github.com/psf/black/issues/402
         files: \.pyi?$
         types: []
@@ -33,4 +34,5 @@ repos:
     rev: v2.4.0
     hooks:
       - id: check-merge-conflict
+      - id: check-toml
       - id: check-yaml
