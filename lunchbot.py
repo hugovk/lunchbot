@@ -24,12 +24,32 @@ from requests_html import HTMLSession  # pip install requests-html
 KAARTI_URL = "http://www.ravintolakaarti.fi/lounas"
 KUUKUU_URL = "https://www.kuukuu.fi/fi/lounas"
 LOUNAAT_URL = "https://www.lounaat.info/kasarmikatu-42-00130-helsinki"
+LOUNAAT_PASILA_URLS = {
+    "Viherlatva": "https://www.lounaat.info/lounas/amica-viherlatva/helsinki",
+    "Antell Akavatalo": "https://www.lounaat.info/lounas/antell-akavatalo/helsinki",
+    "Factory Vallila": "https://www.lounaat.info/lounas/factory-vallila/helsinki",
+    "Savor Vallila": "https://www.lounaat.info/lounas/savor-vallila/helsinki",
+}
+
 PIHKA_URL = "https://kasarmi.pihka.fi/en/"
 SAVEL_URL = "http://toolonsavel.fi/menu/?lang=fi#lounas"
 SOGNO_URL = "http://www.trattoriasogno.fi/lounas"
 
-# RESTAURANTS = ["kaarti", "kuukuu", "savel", "sogno"]
-RESTAURANTS = ["bank", "cock", "factory-aleksi", "pihka", "pompier", "presto"]
+KASSU = [
+    "bank",
+    "cock",
+    "factory-aleksi",
+    "pihka",
+    "pompier",
+    "presto",
+]
+PASILA = [
+    "antell-akavatalo",
+    "factory-vallila",
+    "savor-vallila",
+    "viherlatva",
+]
+RESTAURANTS = KASSU + PASILA
 
 EMOJI = [
     ":fork_and_knife:",
@@ -329,6 +349,53 @@ def lunch_lounaat(restaurant):
     return title, emoji, "\n".join(todays_menu), url
 
 
+# Pasila
+def lunch_factory_vallila():
+    return lunch_pasila("Factory Vallila")
+
+
+def lunch_viherlatva():
+    return lunch_pasila("Viherlatva")
+
+
+def lunch_savor_vallila():
+    return lunch_pasila("Savor Vallila")
+
+
+def lunch_antell_akavatalo():
+    return lunch_pasila("Antell Akavatalo")
+
+
+def lunch_pasila(restaurant):
+    PASILA_LOUNAAT_RESPONSE = None
+
+    url = LOUNAAT_PASILA_URLS[restaurant]
+
+    if not PASILA_LOUNAAT_RESPONSE:
+        # Requests-HTML is easier than Requests + Beautiful Soup
+        session = HTMLSession()
+        PASILA_LOUNAAT_RESPONSE = session.get(url)
+
+    today_number = datetime.datetime.today().weekday()
+    element = PASILA_LOUNAAT_RESPONSE.html.find(
+        "div.item", containing=day_name_fi(today_number), first=True
+    )
+
+    emoji = f':{restaurant.replace(" ", "")}:'
+    title = restaurant
+
+    todays_menu = []
+    opening_hours = PASILA_LOUNAAT_RESPONSE.html.find(
+        "div.tile", containing="ma-", first=True
+    ).text
+    item_body = element.find("div.item-body", first=True).text
+    item_footer = element.find("div.item-footer", first=True).text
+    todays_menu.append(item_body)
+    todays_menu.append(opening_hours + " " + item_footer)
+
+    return title, emoji, "\n".join(todays_menu), url
+
+
 def do_restaurant(restaurant_name, restaurant_function, dry_run, user):
     """Get the menu for a restaurant and post to Slack"""
     output = {}
@@ -401,6 +468,12 @@ if __name__ == "__main__":
         help="Which restaurants to check",
     )
     parser.add_argument(
+        "--kassu", action="store_true", help="Shortcut for the restaurants near Kassu"
+    )
+    parser.add_argument(
+        "--pasila", action="store_true", help="Shortcut for the restaurants in Pasila"
+    )
+    parser.add_argument(
         "-u", "--user", help="Send to this Slack user instead of the lunch channel"
     )
     parser.add_argument(
@@ -409,6 +482,11 @@ if __name__ == "__main__":
     parser.add_argument("-j", "--json", action="store_true", help="Save data as JSON")
     args = parser.parse_args()
     print(args)
+
+    if args.kassu:
+        args.restaurants = KASSU
+    elif args.pasila:
+        args.restaurants = PASILA
 
     # Get Monday, today and tomorrow in Finnish
     today_number = datetime.datetime.today().weekday()
