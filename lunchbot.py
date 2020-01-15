@@ -28,7 +28,7 @@ LOUNAAT_PASILA_URLS = {
     "Viherlatva": "https://www.lounaat.info/lounas/amica-viherlatva/helsinki",
     "Antell Akavatalo": "https://www.lounaat.info/lounas/antell-akavatalo/helsinki",
     "Factory Vallila": "https://www.lounaat.info/lounas/factory-vallila/helsinki",
-    "Savor Vallila": "https://www.lounaat.info/lounas/savor-vallila/helsinki"
+    "Savor Vallila": "https://www.lounaat.info/lounas/savor-vallila/helsinki",
 }
 
 PIHKA_URL = "https://kasarmi.pihka.fi/en/"
@@ -37,8 +37,16 @@ SOGNO_URL = "http://www.trattoriasogno.fi/lounas"
 
 # RESTAURANTS = ["kaarti", "kuukuu", "savel", "sogno"]
 RESTAURANTS = [
-    "bank", "cock", "factory-aleksi", "pihka", "pompier", "presto", 
-    "factory-vallila", "viherlatva", "savor-vallila", "antell-akavatalo"
+    "bank",
+    "cock",
+    "factory-aleksi",
+    "pihka",
+    "pompier",
+    "presto",
+    "factory-vallila",
+    "viherlatva",
+    "savor-vallila",
+    "antell-akavatalo",
 ]
 
 EMOJI = [
@@ -343,18 +351,22 @@ def lunch_lounaat(restaurant):
 def lunch_factory_vallila():
     return lunch_pasila("Factory Vallila")
 
+
 def lunch_viherlatva():
     return lunch_pasila("Fazer Food & Co Viherlatva")
+
 
 def lunch_savor_vallila():
     return lunch_pasila("Savor Vallila")
 
+
 def lunch_antell_akavatalo():
     return lunch_pasila("Antell Akavatalo")
 
+
 def lunch_pasila(restaurant):
     global LOUNAAT_RESPONSE
-    
+
     url = LOUNAAT_PASILA_URLS[restaurant]
 
     if not LOUNAAT_RESPONSE:
@@ -363,19 +375,24 @@ def lunch_pasila(restaurant):
         LOUNAAT_RESPONSE = session.get(url)
 
     today_number = datetime.datetime.today().weekday()
-    element = LOUNAAT_RESPONSE.html.find("div.item", containing=day_name_fi(today_number), first=True)
+    element = LOUNAAT_RESPONSE.html.find(
+        "div.item", containing=day_name_fi(today_number), first=True
+    )
 
     emoji = f':{restaurant.replace(" ", "")}:'
     title = restaurant
 
     todays_menu = []
-    opening_hours = LOUNAAT_RESPONSE.html.find("div.tile", containing="ma-pe", first=True).text
+    opening_hours = LOUNAAT_RESPONSE.html.find(
+        "div.tile", containing="ma-pe", first=True
+    ).text
     item_body = element.find("div.item-body", first=True).text
     item_footer = element.find("div.item-footer", first=True).text
     todays_menu.append(item_body)
     todays_menu.append(opening_hours + " " + item_footer)
 
     return title, emoji, "\n".join(todays_menu), url
+
 
 def do_restaurant(restaurant_name, restaurant_function, dry_run, user):
     """Get the menu for a restaurant and post to Slack"""
