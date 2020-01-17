@@ -381,7 +381,7 @@ def lunch_pasila(restaurant):
         "div.item", containing=day_name_fi(today_number), first=True
     )
 
-    if element == None:
+    if element is None:
         return f"No menu for {day_name_fi(today_number)}", ":cry:", "<Empty>", url
 
     emoji = ":hsl:"
