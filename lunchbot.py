@@ -38,6 +38,7 @@ KASSU = [
     "bank",
     "cock",
     "factory-aleksi",
+    "paisano",
     "pompier",
     "presto",
 ]
@@ -252,6 +253,13 @@ def lunch_kuukuu():
     todays_menu.extend(get_submenu(children, today_fi, tomorrow_fi))
 
     return title, emoji, "\n".join(todays_menu), url
+
+
+def lunch_paisano():
+    """
+    Get the lunch menu from Paisano
+    """
+    return lunch_lounaat("Paisano")
 
 
 def lunch_savel():
