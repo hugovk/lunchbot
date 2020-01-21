@@ -31,7 +31,6 @@ LOUNAAT_PASILA_URLS = {
     "Savor Vallila": "https://www.lounaat.info/lounas/savor-vallila/helsinki",
 }
 
-PIHKA_URL = "https://kasarmi.pihka.fi/en/"
 SAVEL_URL = "http://toolonsavel.fi/menu/?lang=fi#lounas"
 SOGNO_URL = "http://www.trattoriasogno.fi/lounas"
 
@@ -39,7 +38,6 @@ KASSU = [
     "bank",
     "cock",
     "factory-aleksi",
-    "pihka",
     "pompier",
     "presto",
 ]
@@ -254,13 +252,6 @@ def lunch_kuukuu():
     todays_menu.extend(get_submenu(children, today_fi, tomorrow_fi))
 
     return title, emoji, "\n".join(todays_menu), url
-
-
-def lunch_pihka():
-    """
-    Get the lunch menu from Pihka
-    """
-    return lunch_lounaat("Pihka Kasarmi")
 
 
 def lunch_savel():
