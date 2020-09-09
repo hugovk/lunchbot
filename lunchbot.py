@@ -38,6 +38,7 @@ KASSU = [
     "bank",
     "block-by-dylan",
     "cock",
+    "dylan-marmoripiha",
     "factory-aleksi",
     "paisano",
     "pompier",
@@ -207,6 +208,10 @@ def lunch_cock():
     if pause("2019-08-12"):
         return None
     return lunch_lounaat("The Cock")
+
+
+def lunch_dylan_marmoripiha():
+    return lunch_lounaat("Dylan Marmoripiha")
 
 
 def lunch_factory_aleksi():
