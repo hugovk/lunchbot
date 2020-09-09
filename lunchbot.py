@@ -36,11 +36,12 @@ SOGNO_URL = "http://www.trattoriasogno.fi/lounas"
 
 KASSU = [
     "bank",
+    "block-by-dylan",
     "cock",
+    "dylan-marmoripiha",
     "factory-aleksi",
     "paisano",
     "pompier",
-    "presto",
 ]
 PASILA = [
     "antell-akavatalo",
@@ -144,7 +145,7 @@ def dopplr(name):
 
 def squeeze(char, text):
     """Replace repeated characters with a single one
-        https://stackoverflow.com/a/3878698/724176
+    https://stackoverflow.com/a/3878698/724176
     """
     while char * 2 in text:
         text = text.replace(char * 2, char)
@@ -168,9 +169,9 @@ def get_soup(url):
 
 def get_submenu(children, start, end):
     """Given a list of HTML,
-        go through each element,
-        start grabbing from the one containing start text,
-        and stop at the one with end text
+    go through each element,
+    start grabbing from the one containing start text,
+    and stop at the one with end text
     """
     submenu = []
     started = False
@@ -199,10 +200,18 @@ def lunch_bank():
     return lunch_lounaat("Bank Lunch Club")
 
 
+def lunch_block_by_dylan():
+    return lunch_lounaat("Block by Dylan")
+
+
 def lunch_cock():
     if pause("2019-08-12"):
         return None
     return lunch_lounaat("The Cock")
+
+
+def lunch_dylan_marmoripiha():
+    return lunch_lounaat("Dylan Marmoripiha")
 
 
 def lunch_factory_aleksi():
@@ -309,12 +318,6 @@ def lunch_sogno():
 
 def lunch_pompier():
     return lunch_lounaat("Pompier Espa")
-
-
-def lunch_presto():
-    if pause("2019-07-01"):
-        return None
-    return lunch_lounaat("Presto")
 
 
 def lunch_lounaat(restaurant):
