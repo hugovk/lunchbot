@@ -145,7 +145,7 @@ def dopplr(name):
 
 def squeeze(char, text):
     """Replace repeated characters with a single one
-        https://stackoverflow.com/a/3878698/724176
+    https://stackoverflow.com/a/3878698/724176
     """
     while char * 2 in text:
         text = text.replace(char * 2, char)
@@ -169,9 +169,9 @@ def get_soup(url):
 
 def get_submenu(children, start, end):
     """Given a list of HTML,
-        go through each element,
-        start grabbing from the one containing start text,
-        and stop at the one with end text
+    go through each element,
+    start grabbing from the one containing start text,
+    and stop at the one with end text
     """
     submenu = []
     started = False
