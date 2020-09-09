@@ -41,7 +41,6 @@ KASSU = [
     "factory-aleksi",
     "paisano",
     "pompier",
-    "presto",
 ]
 PASILA = [
     "antell-akavatalo",
@@ -314,12 +313,6 @@ def lunch_sogno():
 
 def lunch_pompier():
     return lunch_lounaat("Pompier Espa")
-
-
-def lunch_presto():
-    if pause("2019-07-01"):
-        return None
-    return lunch_lounaat("Presto")
 
 
 def lunch_lounaat(restaurant):
