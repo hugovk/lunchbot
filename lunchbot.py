@@ -36,6 +36,7 @@ SOGNO_URL = "http://www.trattoriasogno.fi/lounas"
 
 KASSU = [
     "bank",
+    "block-by-dylan",
     "cock",
     "factory-aleksi",
     "paisano",
@@ -197,6 +198,10 @@ def get_submenu(children, start, end):
 
 def lunch_bank():
     return lunch_lounaat("Bank Lunch Club")
+
+
+def lunch_block_by_dylan():
+    return lunch_lounaat("Block by Dylan")
 
 
 def lunch_cock():
