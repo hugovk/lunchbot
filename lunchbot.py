@@ -35,7 +35,7 @@ SAVEL_URL = "http://toolonsavel.fi/menu/?lang=fi#lounas"
 SOGNO_URL = "http://www.trattoriasogno.fi/lounas"
 
 KASSU = [
-    "bank",
+    # "bank",
     "block-by-dylan",
     "cock",
     "dylan-marmoripiha",
