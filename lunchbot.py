@@ -41,6 +41,7 @@ KASSU = [
     "dylan-marmoripiha",
     "factory-aleksi",
     "paisano",
+    "pihka-kaarti",
     "pompier",
 ]
 PASILA = [
@@ -269,6 +270,10 @@ def lunch_paisano():
     Get the lunch menu from Paisano
     """
     return lunch_lounaat("Paisano")
+
+
+def lunch_pihka_kaarti():
+    return lunch_lounaat("Pihka Kaarti")
 
 
 def lunch_savel():
