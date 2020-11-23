@@ -55,7 +55,15 @@ RESTAURANTS = KASSU + PASILA
 
 # ID to human-readable name
 MAPPING = {
+    "bank": "Bank Lunch Club",
     "bryggeri": "Bryggeri",
+    "block-by-dylan": "Block by Dylan",
+    "cock": "The Cock",
+    "dylan-marmoripiha": "Dylan Marmoripiha",
+    "factory-aleksi": "Factory Aleksi",
+    "paisano": "Paisano",
+    "pihka-kaarti": "Pihka Kaarti",
+    "pompier": "Pompier Espa",
 }
 
 EMOJI = [
@@ -203,28 +211,6 @@ def get_submenu(children, start, end):
     return submenu
 
 
-def lunch_bank():
-    return lunch_lounaat("Bank Lunch Club")
-
-
-def lunch_block_by_dylan():
-    return lunch_lounaat("Block by Dylan")
-
-
-def lunch_cock():
-    if pause("2019-08-12"):
-        return None
-    return lunch_lounaat("The Cock")
-
-
-def lunch_dylan_marmoripiha():
-    return lunch_lounaat("Dylan Marmoripiha")
-
-
-def lunch_factory_aleksi():
-    return lunch_lounaat("Factory Aleksi")
-
-
 def lunch_kaarti():
     """
     Get the lunch menu from Kaarti
@@ -271,17 +257,6 @@ def lunch_kuukuu():
     return title, emoji, "\n".join(todays_menu), url
 
 
-def lunch_paisano():
-    """
-    Get the lunch menu from Paisano
-    """
-    return lunch_lounaat("Paisano")
-
-
-def lunch_pihka_kaarti():
-    return lunch_lounaat("Pihka Kaarti")
-
-
 def lunch_savel():
     """
     Get the lunch menu from Sävel
@@ -325,10 +300,6 @@ def lunch_sogno():
     todays_menu.extend(get_submenu(children, today_fi, tomorrow_fi))
 
     return title, emoji, "\n".join(todays_menu), url
-
-
-def lunch_pompier():
-    return lunch_lounaat("Pompier Espa")
 
 
 def lunch_lounaat(restaurant):
