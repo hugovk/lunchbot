@@ -34,28 +34,9 @@ LOUNAAT_PASILA_URLS = {
 SAVEL_URL = "http://toolonsavel.fi/menu/?lang=fi#lounas"
 SOGNO_URL = "http://www.trattoriasogno.fi/lounas"
 
-KASSU = [
-    # "bank",
-    "block-by-dylan",
-    "bryggeri",
-    "cock",
-    "dylan-marmoripiha",
-    "factory-aleksi",
-    "paisano",
-    "pihka-kaarti",
-    "pompier",
-]
-PASILA = [
-    "antell-akavatalo",
-    "factory-vallila",
-    "savor-vallila",
-    "viherlatva",
-]
-RESTAURANTS = KASSU + PASILA
-
 # ID to human-readable name
-MAPPING = {
-    "bank": "Bank Lunch Club",
+KASSU = {
+    # "bank": "Bank Lunch Club",
     "bryggeri": "Bryggeri",
     "block-by-dylan": "Block by Dylan",
     "cock": "The Cock",
@@ -65,6 +46,13 @@ MAPPING = {
     "pihka-kaarti": "Pihka Kaarti",
     "pompier": "Pompier Espa",
 }
+PASILA = [
+    "antell-akavatalo",
+    "factory-vallila",
+    "savor-vallila",
+    "viherlatva",
+]
+RESTAURANTS = list(KASSU) + PASILA
 
 EMOJI = [
     ":fork_and_knife:",
@@ -385,7 +373,7 @@ def do_restaurant(restaurant_name, restaurant_function, dry_run, target):
     output = {}
     try:
         if restaurant_function.__name__ == "lunch_lounaat":
-            ret = restaurant_function(MAPPING[restaurant_name])
+            ret = restaurant_function(KASSU[restaurant_name])
         else:
             ret = restaurant_function()
         if ret is None:
@@ -469,7 +457,7 @@ if __name__ == "__main__":
     print(args)
 
     if args.kassu:
-        args.restaurants = KASSU
+        args.restaurants = list(KASSU)
     elif args.pasila:
         args.restaurants = PASILA
 
