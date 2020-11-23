@@ -34,23 +34,26 @@ LOUNAAT_PASILA_URLS = {
 SAVEL_URL = "http://toolonsavel.fi/menu/?lang=fi#lounas"
 SOGNO_URL = "http://www.trattoriasogno.fi/lounas"
 
-KASSU = [
-    # "bank",
-    "block-by-dylan",
-    "cock",
-    "dylan-marmoripiha",
-    "factory-aleksi",
-    "paisano",
-    "pihka-kaarti",
-    "pompier",
-]
-PASILA = [
-    "antell-akavatalo",
-    "factory-vallila",
-    "savor-vallila",
-    "viherlatva",
-]
-RESTAURANTS = KASSU + PASILA
+# ID to human-readable name
+KASSU = {
+    # "bank": "Bank Lunch Club",
+    "bryggeri": "Bryggeri",
+    "block-by-dylan": "Block by Dylan",
+    "cock": "The Cock",
+    "dylan-marmoripiha": "Dylan Marmoripiha",
+    "factory-aleksi": "Factory Aleksi",
+    "paisano": "Paisano",
+    "pihka-kaarti": "Pihka Kaarti",
+    "pompier": "Pompier Espa",
+}
+PASILA = {
+    "antell-akavatalo": "Antell Akavatalo",
+    "factory-vallila": "Factory Vallila",
+    "savor-vallila": "Savor Vallila",
+    "viherlatva": "Viherlatva",
+}
+# Merge both dicts
+RESTAURANTS = {**KASSU, **PASILA}
 
 EMOJI = [
     ":fork_and_knife:",
@@ -197,28 +200,6 @@ def get_submenu(children, start, end):
     return submenu
 
 
-def lunch_bank():
-    return lunch_lounaat("Bank Lunch Club")
-
-
-def lunch_block_by_dylan():
-    return lunch_lounaat("Block by Dylan")
-
-
-def lunch_cock():
-    if pause("2019-08-12"):
-        return None
-    return lunch_lounaat("The Cock")
-
-
-def lunch_dylan_marmoripiha():
-    return lunch_lounaat("Dylan Marmoripiha")
-
-
-def lunch_factory_aleksi():
-    return lunch_lounaat("Factory Aleksi")
-
-
 def lunch_kaarti():
     """
     Get the lunch menu from Kaarti
@@ -263,17 +244,6 @@ def lunch_kuukuu():
     todays_menu.extend(get_submenu(children, today_fi, tomorrow_fi))
 
     return title, emoji, "\n".join(todays_menu), url
-
-
-def lunch_paisano():
-    """
-    Get the lunch menu from Paisano
-    """
-    return lunch_lounaat("Paisano")
-
-
-def lunch_pihka_kaarti():
-    return lunch_lounaat("Pihka Kaarti")
 
 
 def lunch_savel():
@@ -321,10 +291,6 @@ def lunch_sogno():
     return title, emoji, "\n".join(todays_menu), url
 
 
-def lunch_pompier():
-    return lunch_lounaat("Pompier Espa")
-
-
 def lunch_lounaat(restaurant):
     """
     :param restaurant
@@ -357,22 +323,6 @@ def lunch_lounaat(restaurant):
 
 
 # Pasila
-def lunch_factory_vallila():
-    return lunch_pasila("Factory Vallila")
-
-
-def lunch_viherlatva():
-    return lunch_pasila("Viherlatva")
-
-
-def lunch_savor_vallila():
-    return lunch_pasila("Savor Vallila")
-
-
-def lunch_antell_akavatalo():
-    return lunch_pasila("Antell Akavatalo")
-
-
 def lunch_pasila(restaurant):
     PASILA_LOUNAAT_RESPONSE = None
 
@@ -407,7 +357,10 @@ def do_restaurant(restaurant_name, restaurant_function, dry_run, target):
     """Get the menu for a restaurant and post to Slack"""
     output = {}
     try:
-        ret = restaurant_function()
+        if restaurant_function.__name__ in ["lunch_lounaat", "lunch_pasila"]:
+            ret = restaurant_function(RESTAURANTS[restaurant_name])
+        else:
+            ret = restaurant_function()
         if ret is None:
             print("Skip", restaurant_function.__name__)
             return
@@ -464,7 +417,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "-r",
         "--restaurants",
-        choices=["all"] + RESTAURANTS,
+        choices=["all"] + list(RESTAURANTS),
         default=["all"],
         nargs="+",
         help="Which restaurants to check",
@@ -489,9 +442,9 @@ if __name__ == "__main__":
     print(args)
 
     if args.kassu:
-        args.restaurants = KASSU
+        args.restaurants = list(KASSU)
     elif args.pasila:
-        args.restaurants = PASILA
+        args.restaurants = list(PASILA)
 
     # Get Monday, today and tomorrow in Finnish
     today_number = datetime.datetime.today().weekday()
@@ -508,7 +461,7 @@ if __name__ == "__main__":
     tomorrow_en = day_name_en(tomorrow_number)
 
     if args.restaurants == ["all"]:
-        restaurants = RESTAURANTS
+        restaurants = list(RESTAURANTS)
     else:
         restaurants = args.restaurants
     random.shuffle(restaurants)
@@ -527,7 +480,15 @@ if __name__ == "__main__":
         # Call function from a string
         function = "lunch_" + restaurant.replace("-", "_")
         # Like getting lunch_savel()
-        restaurant_function = locals()[function]
+        try:
+            restaurant_function = locals()[function]
+        except KeyError:
+            if restaurant in KASSU:
+                restaurant_function = lunch_lounaat
+            elif restaurant in PASILA:
+                restaurant_function = lunch_pasila
+            else:
+                raise
 
         tries = 0
         while tries < 3:
