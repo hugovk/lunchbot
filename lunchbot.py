@@ -37,6 +37,7 @@ SOGNO_URL = "http://www.trattoriasogno.fi/lounas"
 KASSU = [
     # "bank",
     "block-by-dylan",
+    "bryggeri",
     "cock",
     "dylan-marmoripiha",
     "factory-aleksi",
@@ -51,6 +52,11 @@ PASILA = [
     "viherlatva",
 ]
 RESTAURANTS = KASSU + PASILA
+
+# ID to human-readable name
+MAPPING = {
+    "bryggeri": "Bryggeri",
+}
 
 EMOJI = [
     ":fork_and_knife:",
@@ -407,7 +413,10 @@ def do_restaurant(restaurant_name, restaurant_function, dry_run, target):
     """Get the menu for a restaurant and post to Slack"""
     output = {}
     try:
-        ret = restaurant_function()
+        if restaurant_function.__name__ == "lunch_lounaat":
+            ret = restaurant_function(MAPPING[restaurant_name])
+        else:
+            ret = restaurant_function()
         if ret is None:
             print("Skip", restaurant_function.__name__)
             return
@@ -527,7 +536,11 @@ if __name__ == "__main__":
         # Call function from a string
         function = "lunch_" + restaurant.replace("-", "_")
         # Like getting lunch_savel()
-        restaurant_function = locals()[function]
+        try:
+            restaurant_function = locals()[function]
+        except KeyError:
+            # Assume lounaat
+            restaurant_function = lunch_lounaat
 
         tries = 0
         while tries < 3:
