@@ -1,8 +1,8 @@
 # lunchbot
 
-[![Build Status](https://travis-ci.org/hugovk/lunchbot.svg?branch=master)](https://travis-ci.org/hugovk/lunchbot)
+[![GitHub Actions status](https://github.com/hugovk/lunchbot/workflows/Test/badge.svg)](https://github.com/hugovk/lunchbot/actions)
 [![Python: 3.6+](https://img.shields.io/badge/python-3.6+-blue.svg)](https://www.python.org/downloads/)
-[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![Code style: Black](https://img.shields.io/badge/code%20style-Black-000000.svg)](https://github.com/psf/black)
 
 Check what's for lunch at local restaurants and post to Slack
 
