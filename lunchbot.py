@@ -46,13 +46,14 @@ KASSU = {
     "pihka-kaarti": "Pihka Kaarti",
     "pompier": "Pompier Espa",
 }
-PASILA = [
-    "antell-akavatalo",
-    "factory-vallila",
-    "savor-vallila",
-    "viherlatva",
-]
-RESTAURANTS = list(KASSU) + PASILA
+PASILA = {
+    "antell-akavatalo": "Antell Akavatalo",
+    "factory-vallila": "Factory Vallila",
+    "savor-vallila": "Savor Vallila",
+    "viherlatva": "Viherlatva",
+}
+# Merge both dicts
+RESTAURANTS = {**KASSU, **PASILA}
 
 EMOJI = [
     ":fork_and_knife:",
@@ -322,22 +323,6 @@ def lunch_lounaat(restaurant):
 
 
 # Pasila
-def lunch_factory_vallila():
-    return lunch_pasila("Factory Vallila")
-
-
-def lunch_viherlatva():
-    return lunch_pasila("Viherlatva")
-
-
-def lunch_savor_vallila():
-    return lunch_pasila("Savor Vallila")
-
-
-def lunch_antell_akavatalo():
-    return lunch_pasila("Antell Akavatalo")
-
-
 def lunch_pasila(restaurant):
     PASILA_LOUNAAT_RESPONSE = None
 
@@ -372,8 +357,8 @@ def do_restaurant(restaurant_name, restaurant_function, dry_run, target):
     """Get the menu for a restaurant and post to Slack"""
     output = {}
     try:
-        if restaurant_function.__name__ == "lunch_lounaat":
-            ret = restaurant_function(KASSU[restaurant_name])
+        if restaurant_function.__name__ in ["lunch_lounaat", "lunch_pasila"]:
+            ret = restaurant_function(RESTAURANTS[restaurant_name])
         else:
             ret = restaurant_function()
         if ret is None:
@@ -432,7 +417,7 @@ if __name__ == "__main__":
     parser.add_argument(
         "-r",
         "--restaurants",
-        choices=["all"] + RESTAURANTS,
+        choices=["all"] + list(RESTAURANTS),
         default=["all"],
         nargs="+",
         help="Which restaurants to check",
@@ -459,7 +444,7 @@ if __name__ == "__main__":
     if args.kassu:
         args.restaurants = list(KASSU)
     elif args.pasila:
-        args.restaurants = PASILA
+        args.restaurants = list(PASILA)
 
     # Get Monday, today and tomorrow in Finnish
     today_number = datetime.datetime.today().weekday()
@@ -476,7 +461,7 @@ if __name__ == "__main__":
     tomorrow_en = day_name_en(tomorrow_number)
 
     if args.restaurants == ["all"]:
-        restaurants = RESTAURANTS
+        restaurants = list(RESTAURANTS)
     else:
         restaurants = args.restaurants
     random.shuffle(restaurants)
@@ -498,8 +483,12 @@ if __name__ == "__main__":
         try:
             restaurant_function = locals()[function]
         except KeyError:
-            # Assume lounaat
-            restaurant_function = lunch_lounaat
+            if restaurant in KASSU:
+                restaurant_function = lunch_lounaat
+            elif restaurant in PASILA:
+                restaurant_function = lunch_pasila
+            else:
+                raise
 
         tries = 0
         while tries < 3:
