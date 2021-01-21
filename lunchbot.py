@@ -397,8 +397,9 @@ def do_restaurant(restaurant_name, restaurant_function, dry_run, target):
 
     if not dry_run:
 
-        slacker_cmd = ("slacker -t $LUNCHBOT_TOKEN -n LunchBot -i {} {} {}").format(
-            random.choice(EMOJI), target, attachments
+        slacker_cmd = (
+            f"slacker -t $LUNCHBOT_TOKEN -n LunchBot "
+            f"-i {random.choice(EMOJI)} {target} {attachments}"
         )
         # print(slacker_cmd)
 
