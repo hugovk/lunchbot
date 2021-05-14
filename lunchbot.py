@@ -42,7 +42,6 @@ KASSU = {
     "cock": "The Cock",
     "dylan-marmoripiha": "Dylan Marmoripiha",
     "factory-aleksi": "Factory Aleksi",
-    "himalaya": "Himalaya",
     "paisano": "Paisano",
     "pihka-kaarti": "Pihka Kaarti",
     "pompier": "Pompier Espa",
