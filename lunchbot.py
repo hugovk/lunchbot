@@ -37,6 +37,7 @@ SOGNO_URL = "http://www.trattoriasogno.fi/lounas"
 # ID to human-readable name
 KASSU = {
     # "bank": "Bank Lunch Club",
+    "belge": "Belge",
     "bryggeri": "Bryggeri",
     "block-by-dylan": "Block by Dylan",
     "cock": "The Cock",
@@ -367,7 +368,7 @@ def do_restaurant(restaurant_name, restaurant_function, dry_run, target):
             return
         title, emoji, menu, url = ret
     except AttributeError:
-        print(restaurant_function.__name__)
+        print(restaurant_name, restaurant_function.__name__)
         traceback.print_exc()
         return
 
