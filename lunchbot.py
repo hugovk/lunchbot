@@ -42,6 +42,7 @@ KASSU = {
     "block-by-dylan": "Block by Dylan",
     "cock": "The Cock",
     "dylan-marmoripiha": "Dylan Marmoripiha",
+    "la-torrefazione-kasarmikatu-pop-up": "La Torrefazione Kasarmikatu Pop-up",
     "factory-aleksi": "Factory Aleksi",
     "paisano": "Paisano",
     "pihka-kaarti": "Pihka Kaarti",
