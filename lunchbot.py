@@ -36,7 +36,7 @@ SOGNO_URL = "http://www.trattoriasogno.fi/lounas"
 
 # ID to human-readable name
 KASSU = {
-    # "bank": "Bank Lunch Club",
+    "bank": "Bank Lunch Club",
     "belge": "Belge",
     "bryggeri": "Bryggeri",
     "block-by-dylan": "Block by Dylan",
