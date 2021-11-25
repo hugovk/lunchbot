@@ -475,8 +475,7 @@ if __name__ == "__main__":
     else:
         target = "-c lunch"
 
-    all_output = {}
-    all_output["menus"] = []
+    all_output = {"menus": []}
     for restaurant in restaurants:
 
         # Call function from a string
