@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 """
 Check what's for lunch at local restaurants and post to Slack
 
@@ -42,7 +42,6 @@ KASSU = {
     "block-by-dylan": "Block by Dylan",
     "cock": "The Cock",
     "dylan-marmoripiha": "Dylan Marmoripiha",
-    "factory-aleksi": "Factory Aleksi",
     "paisano": "Paisano",
     "pihka-kaarti": "Pihka Kaarti",
     "pompier": "Pompier Espa",
