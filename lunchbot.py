@@ -22,6 +22,7 @@ from bs4 import BeautifulSoup  # pip install BeautifulSoup4 lxml
 from requests_html import HTMLSession  # pip install requests-html
 
 KAARTI_URL = "http://www.ravintolakaarti.fi/lounas"
+KASARMIKATU_21_URL = "https://www.sodexo.fi/ravintolat/ravintola-kasarmikatu-21"
 KUUKUU_URL = "https://www.kuukuu.fi/fi/lounas"
 LOUNAAT_URL = "https://www.lounaat.info/kasarmikatu-42-00130-helsinki"
 LOUNAAT_PASILA_URLS = {
@@ -42,6 +43,7 @@ KASSU = {
     "block-by-dylan": "Block by Dylan",
     "cock": "The Cock",
     "dylan-marmoripiha": "Dylan Marmoripiha",
+    "kasarmikatu-21": "Kasarmikatu 21",
     "paisano": "Paisano",
     "pihka-kaarti": "Pihka Kaarti",
     "pompier": "Pompier Espa",
@@ -55,6 +57,11 @@ PASILA = {
 }
 # Merge both dicts
 RESTAURANTS = {**KASSU, **PASILA}
+
+USER_AGENT = (
+    "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 "
+    "(KHTML, like Gecko) Chrome/35.0.1916.47 Safari/537.36"
+)
 
 EMOJI = [
     ":fork_and_knife:",
@@ -164,7 +171,8 @@ def day_name_en(day_number):
 
 def get_soup(url):
     """Not that kind"""
-    page = urllib.request.urlopen(url)
+    req = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
+    page = urllib.request.urlopen(req)
     soup = BeautifulSoup(page.read(), "lxml")
     for br in soup.find_all("br"):
         br.replace_with("\n")
@@ -222,6 +230,28 @@ def lunch_kaarti():
     kaarti_menu = [line.capitalize() for line in kaarti_menu]
 
     todays_menu.extend(kaarti_menu)
+
+    return title, emoji, "\n".join(todays_menu), url
+
+
+def lunch_kasarmikatu_21():
+    """
+    Get the lunch menu from Kasarmikatu 21
+    """
+    title = "Kasarmikatu 21"
+    emoji = ":kasarmikatu-21:"
+    url = KASARMIKATU_21_URL
+
+    soup = get_soup(url)
+    todays_tab = soup.select(f"div#tabs-{today_number}")[0]
+
+    todays_menu = [
+        meal_row.get_text(" - ", strip=True).replace("Ravinneinfo - ", "")
+        for meal_row in todays_tab.select("div.mealrow")
+    ]
+
+    lunch_hours = todays_tab.select("div.hours-lunch-hours")[0].get_text(strip=True)
+    todays_menu.append(lunch_hours)
 
     return title, emoji, "\n".join(todays_menu), url
 
