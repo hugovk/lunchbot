@@ -39,13 +39,13 @@ SOGNO_URL = "http://www.trattoriasogno.fi/lounas"
 KASSU = {
     "bank": "Bank Lunch Club",
     "belge": "Belge",
-    "bryggeri": "Bryggeri",
+    # "bryggeri": "Bryggeri",
     "block-by-dylan": "Block by Dylan",
     "cock": "The Cock",
     "dylan-marmoripiha": "Dylan Marmoripiha",
     "kasarmikatu-21": "Kasarmikatu 21",
     "paisano": "Paisano",
-    "pihka-kaarti": "Pihka Kaarti",
+    # "pihka-kaarti": "Pihka Kaarti",
     "pompier": "Pompier Espa",
     "speakeasy-kluuvi": "Speakeasy",
 }
