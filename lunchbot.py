@@ -42,7 +42,6 @@ KASSU = {
     # "bryggeri": "Bryggeri",
     "block-by-dylan": "Block by Dylan",
     "cock": "The Cock",
-    "dylan-marmoripiha": "Dylan Marmoripiha",
     "kasarmikatu-21": "Kasarmikatu 21",
     "paisano": "Paisano",
     # "pihka-kaarti": "Pihka Kaarti",
