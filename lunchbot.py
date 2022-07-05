@@ -26,7 +26,6 @@ KASARMIKATU_21_URL = "https://www.sodexo.fi/ravintolat/ravintola-kasarmikatu-21"
 KUUKUU_URL = "https://www.kuukuu.fi/fi/lounas"
 LOUNAAT_URL = "https://www.lounaat.info/kasarmikatu-42-00130-helsinki"
 LOUNAAT_PASILA_URLS = {
-    "Viherlatva": "https://www.lounaat.info/lounas/amica-viherlatva/helsinki",
     "Antell Akavatalo": "https://www.lounaat.info/lounas/antell-akavatalo/helsinki",
     "Factory Vallila": "https://www.lounaat.info/lounas/factory-vallila/helsinki",
     "Savor Vallila": "https://www.lounaat.info/lounas/savor-vallila/helsinki",
@@ -52,7 +51,6 @@ PASILA = {
     "antell-akavatalo": "Antell Akavatalo",
     "factory-vallila": "Factory Vallila",
     "savor-vallila": "Savor Vallila",
-    "viherlatva": "Viherlatva",
 }
 # Merge both dicts
 RESTAURANTS = {**KASSU, **PASILA}
