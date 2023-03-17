@@ -186,7 +186,6 @@ def get_submenu(children, start, end):
     submenu = []
     started = False
     for child in children:
-
         child_text = child.get_text()
 
         if "Lounas maanantaista perjantaihin" in child_text:
@@ -424,7 +423,6 @@ def do_restaurant(restaurant_name, restaurant_function, dry_run, target):
     attachments = f"attachments='{json.dumps(attachment)}'"
 
     if not dry_run:
-
         slacker_cmd = (
             f"slacker -t $LUNCHBOT_TOKEN -n LunchBot "
             f"-i {random.choice(EMOJI)} {target} {attachments}"
@@ -504,7 +502,6 @@ if __name__ == "__main__":
 
     all_output = {"menus": []}
     for restaurant in restaurants:
-
         # Call function from a string
         function = "lunch_" + restaurant.replace("-", "_")
         # Like getting lunch_savel()
