@@ -35,7 +35,7 @@ SAVEL_URL = "http://toolonsavel.fi/menu/?lang=fi#lounas"
 SOGNO_URL = "http://www.trattoriasogno.fi/lounas"
 
 # ID to human-readable name
-KASSU = {
+NAVI = {
     "bank": "Bank Lunch Club",
     "belge": "Belge",
     # "bryggeri": "Bryggeri",
@@ -53,7 +53,7 @@ PASILA = {
     "savor-vallila": "Savor Vallila",
 }
 # Merge both dicts
-RESTAURANTS = {**KASSU, **PASILA}
+RESTAURANTS = {**NAVI, **PASILA}
 
 USER_AGENT = (
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_9_3) AppleWebKit/537.36 "
@@ -450,7 +450,7 @@ if __name__ == "__main__":
         help="Which restaurants to check",
     )
     parser.add_argument(
-        "--kassu", action="store_true", help="Shortcut for the restaurants near Kassu"
+        "--navi", action="store_true", help="Shortcut for the restaurants near Navi"
     )
     parser.add_argument(
         "--pasila", action="store_true", help="Shortcut for the restaurants in Pasila"
@@ -468,8 +468,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
     print(args)
 
-    if args.kassu:
-        args.restaurants = list(KASSU)
+    if args.navi:
+        args.restaurants = list(NAVI)
     elif args.pasila:
         args.restaurants = list(PASILA)
 
@@ -508,7 +508,7 @@ if __name__ == "__main__":
         try:
             restaurant_function = locals()[function]
         except KeyError:
-            if restaurant in KASSU:
+            if restaurant in NAVI:
                 restaurant_function = lunch_lounaat
             elif restaurant in PASILA:
                 restaurant_function = lunch_pasila
