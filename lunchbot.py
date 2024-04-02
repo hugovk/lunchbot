@@ -45,7 +45,6 @@ NAVI = {
     "paisano": "Paisano",
     # "pihka-kaarti": "Pihka Kaarti",
     "pompier": "Pompier Espa",
-    "speakeasy-kluuvi": "Speakeasy",
 }
 PASILA = {
     "antell-akavatalo": "Antell Akavatalo",

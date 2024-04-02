@@ -1,4 +1,4 @@
 BeautifulSoup4
-lxml
+lxml[html_clean]
 requests-html
 slacker-cli
