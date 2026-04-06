@@ -7,6 +7,7 @@ pip install slacker-cli
 Get a Slack token and save it in LUNCHBOT_TOKEN the environment variable
 See: https://github.com/juanpabloaj/slacker-cli#tokens
 """
+
 import argparse
 import calendar
 import datetime
